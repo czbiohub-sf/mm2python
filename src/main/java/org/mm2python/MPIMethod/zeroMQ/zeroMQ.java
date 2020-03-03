@@ -56,6 +56,7 @@ public class zeroMQ {
         long start = System.nanoTime();
         byte[] bytepixels = convertToByte(rawpixels);
         socket.send(bytepixels, ZMQ.DONTWAIT);
+//        socket.send(bytepixels);
         long stop = System.nanoTime();
         reporter.set_report_area(String.format("Time to send to sockets (us): %d", (stop-start)/1000));
     }
@@ -76,6 +77,11 @@ public class zeroMQ {
         return context;
     }
 
+    /**
+     *
+     * @param pixels
+     * @return
+     */
     private static ByteBuffer convertToByteBuffer(Object pixels) {
         try
         {

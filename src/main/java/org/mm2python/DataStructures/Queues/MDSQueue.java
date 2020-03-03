@@ -53,30 +53,38 @@ public class MDSQueue {
     }
 
     public MetaDataStore getFirstMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
-        return traverseQueue(mdsp, true);
+        return traverseQueueAndRemove(mdsp, true);
     }
 
     public MetaDataStore getLastMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
-        return traverseQueue(mdsp, false);
+        return traverseQueueAndRemove(mdsp, false);
     }
 
     public String getFirstFilenameByParam(MDSParameters mdsp) throws InvalidParameterException {
-        MetaDataStore m = traverseQueue(mdsp, true);
-        return m.getFilepath();
+        MetaDataStore m = traverseQueueAndRemove(mdsp, true);
+        try {
+            return m.getFilepath();
+        } catch(NullPointerException ne) {
+            return null;
+        }
     }
 
     public String getLastFilenameByParam(MDSParameters mdsp) throws InvalidParameterException {
-        MetaDataStore m = traverseQueue(mdsp, false);
-        return m.getFilepath();
+        MetaDataStore m = traverseQueueAndRemove(mdsp, false);
+        try {
+            return m.getFilepath();
+        } catch (NullPointerException ne) {
+            return null;
+        }
     }
 
-    public void removeFirstMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
-        traverseQueueAndRemove(mdsp, true);
-    }
-
-    public void removeLastMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
-        traverseQueueAndRemove(mdsp, false);
-    }
+//    public void removeFirstMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
+//        traverseQueueAndRemove(mdsp, true);
+//    }
+//
+//    public void removeLastMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
+//        traverseQueueAndRemove(mdsp, false);
+//    }
 
     /**
      * iterates forward or backwards through the mdsQueue to find the next MDS containing requested parameters
@@ -132,19 +140,34 @@ public class MDSQueue {
             for(MDSParamObject s : params) {
                 switch(s.getLabel()){
                     case "TIME":
-                        if(temp.getTime() == s.getInt()) {mdsQueue.remove(temp);}
+                        if(temp.getTime() == s.getInt()) {
+                            mdsQueue.remove(temp);
+                            return temp;
+                        }
                         break;
                     case "POSITION":
-                        if(temp.getPosition() == s.getInt()) {mdsQueue.remove(temp);}
+                        if(temp.getPosition() == s.getInt()) {
+                            mdsQueue.remove(temp);
+                            return temp;
+                        }
                         break;
                     case "Z":
-                        if(temp.getZ() == s.getInt()) {mdsQueue.remove(temp);}
+                        if(temp.getZ() == s.getInt()) {
+                            mdsQueue.remove(temp);
+                            return temp;
+                        }
                         break;
                     case "CHANNEL":
-                        if(temp.getChannel() == s.getInt()) {mdsQueue.remove(temp);}
+                        if(temp.getChannel() == s.getInt()) {
+                            mdsQueue.remove(temp);
+                            return temp;
+                        }
                         break;
                     case "CHANNELNAME":
-                        if(temp.getChannelName().equals(s.getStr())) {mdsQueue.remove(temp);}
+                        if(temp.getChannelName().equals(s.getStr())) {
+                            mdsQueue.remove(temp);
+                            return temp;
+                        }
                         break;
                 }
             }

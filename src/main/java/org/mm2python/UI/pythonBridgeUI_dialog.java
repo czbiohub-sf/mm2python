@@ -45,6 +45,8 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+// todo: STOP monitor needs to unregister all registered data viewers and data providers.
+
 
 public class pythonBridgeUI_dialog extends JFrame {
     private JPanel contentPane;
@@ -146,6 +148,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
 
         Constants.setFixedMemMap(true);
+        Constants.setZMQButton(true);
         reporter.set_report_area("org.mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
 
         // initialize MetaDataStore Map
@@ -247,12 +250,12 @@ public class pythonBridgeUI_dialog extends JFrame {
             gevents = new globalEvents(mm);
         }
 
-        ExecutorService mmExecutor = MainExecutor.getExecutor();
-
-        //register all open windows for events
-        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
-            mmExecutor.execute(new globalEventsThread(mm, dv));
-        }
+//        ExecutorService mmExecutor = MainExecutor.getExecutor();
+//
+//        //register all open windows for events
+//        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
+//            mmExecutor.execute(new globalEventsThread(mm, dv));
+//        }
 
         mm.events().registerForEvents(this);
         mm.getEventManager().registerForEvents(this);

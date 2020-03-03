@@ -128,11 +128,6 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         MDSMap.clearData();
     }
 
-    // TESTER METHOD
-    public String ping() {
-        return "ping from py4j";
-    }
-
     //============== zmq data retrieval methods ==================================//
 
     /**
@@ -193,10 +188,8 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return zeroMQ.getContext();
     }
 
-    //============== Data Map interface methods ====================//
-    //== For retrieving MetaDataStore objects and Filenames ======================//
-
-    // Map retrieval interface methods
+    // =====================================
+    // MDSQueue retrieval interface methods
 
     public MetaDataStore getLastMeta() {
         MDSQueue m = new MDSQueue();
@@ -204,93 +197,25 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
             return null;
         }
         MetaDataStore meta = m.getLastMDS();
-        reporter.set_report_area(String.format("\nLastMeta called (t, z): (%d, %d)", meta.getTime(), meta.getZ()));
+//        reporter.set_report_area(String.format("\nLastMeta called (t, z): (%d, %d)", meta.getTime(), meta.getZ()));
         return meta;
     }
 
     public MetaDataStore getFirstMeta() {
-        // todo: be sure meta exists
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDS();
     }
-
-    @Override
-    public ArrayList<String> getFilesByChannelName(String channelName) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getFilenamesByParams(params);
-    }
-
-    @Override
-    public ArrayList<String> getFilesByChannelIndex(int channelIndex) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getFilenamesByParams(params);
-    }
-
-    @Override
-    public ArrayList<String> getFilesByZ(int z) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getFilenamesByParams(params);
-    }
-
-    @Override
-    public ArrayList<String> getFilesByPosition(int pos) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getFilenamesByParams(params);
-    }
-
-    @Override
-    public ArrayList<String> getFilesByTime(int time) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getFilenamesByParams(params);
-    }
-
-    @Override
-    public ArrayList<MetaDataStore> getMetaByChannelName(String channelName) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getMDSByParams(params);
-    }
-
-    @Override
-    public ArrayList<MetaDataStore> getMetaByChannelIndex(int channelIndex) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getMDSByParams(params);
-    }
-
-    @Override
-    public ArrayList<MetaDataStore> getMetaByZ(int z) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getMDSByParams(params);
-    }
-
-    @Override
-    public ArrayList<MetaDataStore> getMetaByPosition(int pos) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getMDSByParams(params);
-    }
-
-    @Override
-    public ArrayList<MetaDataStore> getMetaByTime(int time) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
-        MDSMap m = new MDSMap();
-        return m.getMDSByParams(params);
-    }
-
-    // =====================================
-    // MDSQueue retrieval interface methods
 
     @Override
     public MetaDataStore getLastMetaByChannelName(String channelName) throws IllegalAccessException{
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getLastMDSByParam(params);
     }
 
@@ -298,6 +223,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getLastMetaByChannelIndex(int channelIndex) throws IllegalAccessException{
         MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getLastMDSByParam(params);
     }
 
@@ -305,6 +233,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getLastMetaByZ(int z) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getLastMDSByParam(params);
     }
 
@@ -312,6 +243,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getLastMetaByPosition(int pos) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getLastMDSByParam(params);
     }
 
@@ -319,6 +253,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getLastMetaByTime(int time) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getLastMDSByParam(params);
     }
 
@@ -326,6 +263,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getFirstMetaByChannelName(String channelName) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDSByParam(params);
     }
 
@@ -333,6 +273,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getFirstMetaByChannelIndex(int channelIndex) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDSByParam(params);
     }
 
@@ -340,6 +283,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getFirstMetaByZ(int z) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDSByParam(params);
     }
 
@@ -347,6 +293,9 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getFirstMetaByPosition(int pos) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDSByParam(params);
     }
 
@@ -354,19 +303,213 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     public MetaDataStore getFirstMetaByTime(int time) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
         MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
         return m.getFirstMDSByParam(params);
     }
 
-    public void removeFirstMetaByChannelName(String channelName) throws IllegalAccessException {
+//    public void removeFirstMetaByChannelName(String channelName) throws IllegalAccessException {
+//        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
+//        MDSQueue m = new MDSQueue();
+//        m.removeFirstMDSByParam(params);
+//    }
+//
+//    public void removeLastMetaByChannelName(String channelName) throws IllegalAccessException {
+//        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
+//        MDSQueue m = new MDSQueue();
+//        m.removeFirstMDSByParam(params);
+//    }
+
+    //============== Data Path interface methods ====================//
+    //== For retrieving Filepaths to mmap files =====================//
+
+
+    // Path retrieval interface methods
+
+    @Override
+    public String getLastFileByChannelName(String channelName) throws IllegalAccessException{
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
-        m.removeFirstMDSByParam(params);
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
     }
 
-    public void removeLastMetaByChannelName(String channelName) throws IllegalAccessException {
+    // get last file by channel
+    @Override
+    public String getLastFileByChannelIndex(int channelIndex) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get last file by z
+    @Override
+    public String getLastFileByZ(int z) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get last file by p
+    @Override
+    public String getLastFileByPosition(int pos) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get last file by t
+    @Override
+    public String getLastFileByTime(int time) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get first file by channel_name
+    @Override
+    public String getFirstFileByChannelName(String channelName) throws IllegalAccessException {
         MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
         MDSQueue m = new MDSQueue();
-        m.removeFirstMDSByParam(params);
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get first file by channel
+    @Override
+    public String getFirstFileByChannelIndex(int channelIndex) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get first file by z
+    @Override
+    public String getFirstFileByZ(int z) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get first file by p
+    @Override
+    public String getFirstFileByPosition(int pos) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    // get first file by t
+    @Override
+    public String getFirstFileByTime(int time) throws IllegalAccessException {
+        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
+        MDSQueue m = new MDSQueue();
+        if(m.isQueueEmpty()) {
+            return null;
+        }
+        return m.getLastFilenameByParam(params);
+    }
+
+    //============== Data Map interface methods ====================//
+    //== For retrieving MetaDataStore objects and Filenames ======================//
+    //== Useful for retrieving but not removing references to existing data ======//
+
+    // Map retrieval interface methods
+
+    @Override
+    public ArrayList<String> getAllFilesByChannelName(String channelName) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getFilenamesByParams(params);
+    }
+
+    @Override
+    public ArrayList<String> getAllFilesByChannelIndex(int channelIndex) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getFilenamesByParams(params);
+    }
+
+    @Override
+    public ArrayList<String> getAllFilesByZ(int z) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getFilenamesByParams(params);
+    }
+
+    @Override
+    public ArrayList<String> getAllFilesByPosition(int pos) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getFilenamesByParams(params);
+    }
+
+    @Override
+    public ArrayList<String> getAllFilesByTime(int time) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getFilenamesByParams(params);
+    }
+
+    @Override
+    public ArrayList<MetaDataStore> getAllMetaByChannelName(String channelName) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getMDSByParams(params);
+    }
+
+    @Override
+    public ArrayList<MetaDataStore> getAllMetaByChannelIndex(int channelIndex) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getMDSByParams(params);
+    }
+
+    @Override
+    public ArrayList<MetaDataStore> getAllMetaByZ(int z) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getMDSByParams(params);
+    }
+
+    @Override
+    public ArrayList<MetaDataStore> getAllMetaByPosition(int pos) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getMDSByParams(params);
+    }
+
+    @Override
+    public ArrayList<MetaDataStore> getAllMetaByTime(int time) throws IllegalAccessException{
+        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
+        MDSMap m = new MDSMap();
+        return m.getMDSByParams(params);
     }
 
 
@@ -394,89 +537,5 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return new MDSMap().getMDSByParams(mdsp);
     }
 
-    //============== Data Path interface methods ====================//
-    //== For retrieving Filepaths to mmap files =====================//
-
-
-    // Path retrieval interface methods
-
-    @Override
-    public String getLastFileByChannelName(String channelName) throws IllegalAccessException{
-        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get last file by channel
-    @Override
-    public String getLastFileByChannelIndex(int channelIndex) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get last file by z
-    @Override
-    public String getLastFileByZ(int z) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get last file by p
-    @Override
-    public String getLastFileByPosition(int pos) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get last file by t
-    @Override
-    public String getLastFileByTime(int time) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get first file by channel_name
-    @Override
-    public String getFirstFileByChannelName(String channelName) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get first file by channel
-    @Override
-    public String getFirstFileByChannelIndex(int channelIndex) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().channel(channelIndex).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get first file by z
-    @Override
-    public String getFirstFileByZ(int z) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().z(z).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get first file by p
-    @Override
-    public String getFirstFileByPosition(int pos) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().position(pos).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
-
-    // get first file by t
-    @Override
-    public String getFirstFileByTime(int time) throws IllegalAccessException {
-        MDSParameters params = new MDSParamBuilder().time(time).buildMDSParams();
-        MDSQueue m = new MDSQueue();
-        return m.getLastFilenameByParam(params);
-    }
 
 }

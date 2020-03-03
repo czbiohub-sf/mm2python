@@ -23,34 +23,34 @@ public interface DataMapInterface {
     //  return arraylists of filenames
     //  return arraylists of MDS objects
     // get files by channel_name
-    public ArrayList<String> getFilesByChannelName(String channelName) throws IllegalAccessException;
+    public ArrayList<String> getAllFilesByChannelName(String channelName) throws IllegalAccessException;
 
     // get files by channel
-    public ArrayList<String> getFilesByChannelIndex(int channelIndex) throws IllegalAccessException;
+    public ArrayList<String> getAllFilesByChannelIndex(int channelIndex) throws IllegalAccessException;
 
     // get files by z
-    public ArrayList<String> getFilesByZ(int z) throws IllegalAccessException;
+    public ArrayList<String> getAllFilesByZ(int z) throws IllegalAccessException;
 
     // get files by p
-    public ArrayList<String> getFilesByPosition(int pos) throws IllegalAccessException;
+    public ArrayList<String> getAllFilesByPosition(int pos) throws IllegalAccessException;
 
     // get files by t
-    public ArrayList<String> getFilesByTime(int time) throws IllegalAccessException;
+    public ArrayList<String> getAllFilesByTime(int time) throws IllegalAccessException;
 
     // get meta by channel_name
-    public ArrayList<MetaDataStore> getMetaByChannelName(String channelName) throws IllegalAccessException;
+    public ArrayList<MetaDataStore> getAllMetaByChannelName(String channelName) throws IllegalAccessException;
 
     // get meta by channel
-    public ArrayList<MetaDataStore> getMetaByChannelIndex(int channelIndex) throws IllegalAccessException;
+    public ArrayList<MetaDataStore> getAllMetaByChannelIndex(int channelIndex) throws IllegalAccessException;
 
     // get meta by z
-    public ArrayList<MetaDataStore> getMetaByZ(int z) throws IllegalAccessException;
+    public ArrayList<MetaDataStore> getAllMetaByZ(int z) throws IllegalAccessException;
 
     // get meta by p
-    public ArrayList<MetaDataStore> getMetaByPosition(int pos) throws IllegalAccessException;
+    public ArrayList<MetaDataStore> getAllMetaByPosition(int pos) throws IllegalAccessException;
 
     // get meta by t
-    public ArrayList<MetaDataStore> getMetaByTime(int time) throws IllegalAccessException;
+    public ArrayList<MetaDataStore> getAllMetaByTime(int time) throws IllegalAccessException;
 
 
     //  these call MDSQueue
