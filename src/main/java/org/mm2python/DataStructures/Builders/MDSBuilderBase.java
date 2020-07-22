@@ -3,6 +3,7 @@ package org.mm2python.DataStructures.Builders;
 import org.micromanager.data.Coords;
 import org.micromanager.data.DataProvider;
 import org.micromanager.data.Datastore;
+import org.micromanager.data.SummaryMetadata;
 import org.mm2python.DataStructures.MetaDataStore;
 
 /**
@@ -28,6 +29,8 @@ abstract public class MDSBuilderBase {
     DataProvider dataprovider;
 
     Coords coord;
+
+    SummaryMetadata summaryMetadata;
 
     public MDSBuilderBase time(int t) {
         this.time = t;
@@ -102,6 +105,11 @@ abstract public class MDSBuilderBase {
 
     public MDSBuilderBase coord(Coords coord_) {
         this.coord = coord_;
+        return this;
+    }
+
+    public MDSBuilderBase summaryMetadata(SummaryMetadata sumdat_) {
+        this.summaryMetadata = sumdat_;
         return this;
     }
 

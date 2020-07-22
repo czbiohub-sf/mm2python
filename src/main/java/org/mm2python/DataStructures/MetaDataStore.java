@@ -2,6 +2,7 @@ package org.mm2python.DataStructures;
 
 import org.micromanager.data.Coords;
 import org.micromanager.data.DataProvider;
+import org.micromanager.data.SummaryMetadata;
 
 import java.util.Objects;
 
@@ -30,6 +31,9 @@ public class MetaDataStore {
 
     private Coords coord;
 
+    private SummaryMetadata summaryMetadata;
+
+
     // package private constructor
     public MetaDataStore(Integer z_, Integer pos_, Integer time_, Integer channel_,
                          Integer x_dim_, Integer y_dim_, Integer bitDepth_,
@@ -37,7 +41,8 @@ public class MetaDataStore {
                          String filepath_, Integer buffer_position_,
                          Object image_,
                          DataProvider dataProvider_,
-                         Coords coord_)
+                         Coords coord_,
+                         SummaryMetadata summaryMetadata_)
     {
         // positivity check
         if
@@ -72,6 +77,9 @@ public class MetaDataStore {
 
         if(dataProvider_ != null) {this.dataprovider = dataProvider_;}
         if(coord_ != null) {this.coord = coord_;}
+
+        // assign metadata
+        summaryMetadata = summaryMetadata_;
     }
 
     public Integer getZ() { return this.z;}
@@ -111,6 +119,8 @@ public class MetaDataStore {
     public DataProvider getDataProvider() {return this.dataprovider;}
 
     public Coords getCoord() {return this.coord;}
+
+    public SummaryMetadata getSummaryMetadata() {return this.summaryMetadata;}
 
 
     /**
