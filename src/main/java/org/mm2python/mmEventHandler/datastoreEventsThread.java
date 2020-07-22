@@ -169,6 +169,7 @@ public class datastoreEventsThread implements Runnable {
 //                    .image(temp_img.getRawPixels())
                     .dataprovider(data)
                     .coord(coord)
+                    .summaryMetadata(summary)
 
                     .buildMDS();
         } catch(IllegalAccessException ilex){

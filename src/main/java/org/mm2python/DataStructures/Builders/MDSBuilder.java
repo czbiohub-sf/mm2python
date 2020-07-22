@@ -24,7 +24,8 @@ public class MDSBuilder extends MDSBuilderBase {
 
                 image,
                 dataprovider,
-                coord);
+                coord,
+                summaryMetadata);
     }
 
     /**
