@@ -5,6 +5,7 @@
  */
 package org.mm2python.MPIMethod.Py4J;
 
+import mmcorej.TaggedImage;
 import org.mm2python.DataStructures.Builders.MDSParamBuilder;
 import org.mm2python.DataStructures.Builders.MDSParameters;
 import org.mm2python.DataStructures.Constants;
@@ -15,6 +16,7 @@ import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
 import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.DataPathInterface;
 import org.mm2python.mmDataHandler.DataMapInterface;
+import org.mm2python.DataStructures.Constants;
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
 import org.zeromq.ZContext;
@@ -129,33 +131,14 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     }
 
     //============== zmq data retrieval methods ==================================//
-
+    // TODO: change these to "sendImage" rather than "getImage", which is used in the mmc API
     /**
-     * send the last image (as determined by MDS Queue) out via zeroMQ port
-     * todo: remove or refactor this.. remember, meta might not be available!
+     * return either the metadata for the last image or send the raw image to zmq ports
      */
     public boolean getLastImage() {
         try {
             MetaDataStore mds = this.getLastMeta();
-//            Object rawpixels = mds.getImage();
             Object rawpixels = mds.getDataProvider().getImage(mds.getCoord()).getRawPixels();
-
-            zeroMQ.send(rawpixels);
-            return true;
-        } catch (Exception ex) {
-            return false;
-        }
-    }
-
-    /**
-     * send the image (as determined by supplied MDS) out via zeroMQ port
-     * @param mds
-     */
-    public boolean getImage(MetaDataStore mds) {
-        try {
-//            Object rawpixels = mds.getImage();
-            Object rawpixels = mds.getDataProvider().getImage(mds.getCoord()).getRawPixels();
-
             zeroMQ.send(rawpixels);
             return true;
         } catch (Exception ex) {
@@ -170,6 +153,46 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         MetaDataStore mds = this.getFirstMeta();
         Object rawpixels = mds.getImage();
         zeroMQ.send(rawpixels);
+    }
+
+    /**
+     * send the image (as determined by supplied MDS) out via zeroMQ port
+     * @param mds
+     */
+    public boolean getImage(MetaDataStore mds) {
+        try {
+            Object rawpixels = mds.getDataProvider().getImage(mds.getCoord()).getRawPixels();
+
+            zeroMQ.send(rawpixels);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean getImage(TaggedImage tm) {
+        try {
+            Object rawpixels = tm.pix;
+            zeroMQ.send(rawpixels);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+
+    public boolean getImage(Object obj) {
+        try{
+            if (obj instanceof short[]){
+                zeroMQ.send(obj);
+                return true;
+            } else {
+                reporter.set_report_area("object representing internal image Buffer is not an instance of Short[]");
+            }
+        } catch (Exception ex) {
+            reporter.set_report_area(ex.toString());
+            return false;
+        }
+        return false;
     }
 
     /**
@@ -207,6 +230,16 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
             return null;
         }
         return m.getFirstMDS();
+    }
+
+    public boolean getMeta(TaggedImage tim) {
+        // todo: given a tagged image object, write this object to memory mapped file
+        return false;
+    }
+
+    public boolean getMeta(Object objim) {
+        // todo: given a the internal image buffer, write this data to memory mapped file
+        return false;
     }
 
     @Override
