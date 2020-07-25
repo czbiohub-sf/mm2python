@@ -7,7 +7,8 @@ import org.micromanager.acquisition.AcquisitionManager;
 import org.micromanager.acquisition.SequenceSettings;
 import org.micromanager.data.DataProvider;
 import org.micromanager.data.Datastore;
-import org.micromanager.display.DisplayWindow;
+//import org.micromanager.display.DisplayWindow;
+import org.micromanager.display.DataViewer;
 import org.mm2python.UI.reporter;
 import org.mm2python.mmEventHandler.globalEventsThread;
 
@@ -23,11 +24,12 @@ import static org.mockito.Mockito.when;
 class GlobalEventsThreadTests {
 
     private Studio mm;
-    private DisplayWindow dw;
+//    private DisplayWindow dw;
+    private DataViewer dv;
 
     private void setUp() {
         mm = mock(Studio.class);
-        dw = mock(DisplayWindow.class);
+        dv = mock(DataViewer.class);
 
         // mocking methods needed by reporter
         JTextArea jta = mock(JTextArea.class);
@@ -35,14 +37,14 @@ class GlobalEventsThreadTests {
         when(mm.logs()).thenReturn(lm);
         doNothing().when(lm).logMessage(anyString());
 
-        when(dw.getName()).thenReturn("TEST: window name");
+        when(dv.getName()).thenReturn("TEST: window name");
         new reporter(jta, mm);
 
         // mocking methods needed by testrunnable
         Datastore ds = mock(Datastore.class);
         DataProvider dp = mock(DataProvider.class);
-        when(dw.getDatastore()).thenReturn(ds);
-        when(dw.getDataProvider()).thenReturn(dp);
+        when(dv.getDatastore()).thenReturn(ds);
+        when(dv.getDataProvider()).thenReturn(dp);
 
         SequenceSettings ss = mock(SequenceSettings.class);
         AcquisitionManager aq = mock(AcquisitionManager.class);
@@ -53,7 +55,7 @@ class GlobalEventsThreadTests {
     @Test
     void testConstructor() {
         setUp();
-        globalEventsThread geth = new globalEventsThread(mm, dw);
+        globalEventsThread geth = new globalEventsThread(mm, dv);
 
         assertEquals(globalEventsThread.class, geth.getClass());
     }
@@ -61,7 +63,7 @@ class GlobalEventsThreadTests {
     @Test
     void testrunnable() {
         setUp();
-        globalEventsThread geth = new globalEventsThread(mm, dw);
+        globalEventsThread geth = new globalEventsThread(mm, dv);
 
         geth.run();
 
