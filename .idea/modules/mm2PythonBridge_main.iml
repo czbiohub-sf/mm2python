@@ -11,25 +11,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20190806/plugins/Micro-Manager/MMCoreJ.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20190806/plugins/Micro-Manager/MMJ_.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20190806/plugins/Micro-Manager/scijava-common-2.77.0.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20200722/plugins/Micro-Manager/scijava-common-2.77.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -64,7 +46,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20190806/ij.jar!/" />
+          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20200722/plugins/Micro-Manager/MMCoreJ.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Micro-Manager-2.0.0-gamma1-20200722/plugins/Micro-Manager/MMJ_.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

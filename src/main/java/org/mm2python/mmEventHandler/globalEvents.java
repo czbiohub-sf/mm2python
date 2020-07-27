@@ -15,7 +15,7 @@ import org.micromanager.Studio;
 import com.google.common.eventbus.Subscribe;
 import java.util.concurrent.ExecutorService;
 import org.mm2python.mmEventHandler.Executor.MainExecutor;
-import org.micromanager.events.NewDisplayEvent;
+//import org.micromanager.events.NewDisplayEvent;
 
 
 /**
@@ -64,25 +64,25 @@ public class globalEvents {
         mm.events().unregisterForEvents(this);
     }
 
-    /**
-     * When this class is registered for events, 'monitor_aboutToShow' receives the
-     *  'DisplayAboutToShowEvent' event.
-     * Every instance of the display event kicks off a thread using the Singleton mmExecutor
-     *
-     * @param event: micro-manager event type.
-     */
-    @Subscribe
-    public void monitor_aboutToShow(NewDisplayEvent event) {
-        System.out.println("NewDisplayEvent detected");
-        try {
-            reporter.set_report_area(true, true, true, "\n");
-            reporter.set_report_area(true, true, true,"DisplayAboutToShowEvent event detected");
-
-            mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
-        } catch (Exception ex) {
-            reporter.set_report_area("EXCEPTION = "+ex.toString());
-        }
-    }
+//    /**
+//     * When this class is registered for events, 'monitor_aboutToShow' receives the
+//     *  'DisplayAboutToShowEvent' event.
+//     * Every instance of the display event kicks off a thread using the Singleton mmExecutor
+//     *
+//     * @param event: micro-manager event type.
+//     */
+//    @Subscribe
+//    public void monitor_aboutToShow(NewDisplayEvent event) {
+//        System.out.println("NewDisplayEvent detected");
+//        try {
+//            reporter.set_report_area(true, true, true, "\n");
+//            reporter.set_report_area(true, true, true,"DisplayAboutToShowEvent event detected");
+//
+//            mmExecutor.execute(new globalEventsThread(mm, event.getDisplay()));
+//        } catch (Exception ex) {
+//            reporter.set_report_area("EXCEPTION = "+ex.toString());
+//        }
+//    }
 
     @Subscribe
     public void newDataViewer(DataViewerAddedEvent event) {
@@ -91,10 +91,10 @@ public class globalEvents {
         mmExecutor.execute(new globalEventsThread(mm, event.getDataViewer()));
     }
 
-    @Subscribe
-    public void newDisplayEvent(NewDisplayEvent event) {
-        System.out.println("NEW DISPLAY EVENT ");
-        System.out.println("event = "+event.getDisplay().toString());
-    }
+//    @Subscribe
+//    public void newDisplayEvent(NewDisplayEvent event) {
+//        System.out.println("NEW DISPLAY EVENT ");
+//        System.out.println("event = "+event.getDisplay().toString());
+//    }
     
 }

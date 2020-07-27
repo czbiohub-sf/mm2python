@@ -1,5 +1,6 @@
 package org.mm2python.mmDataHandler;
 
+import mmcorej.TaggedImage;
 import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.micromanager.data.Image;
@@ -16,11 +17,17 @@ import java.util.Arrays;
  * contains methods for writing image data to a memory mapped buffer
  */
 public class memMapFromBuffer {
+    // todo: this class does not need to 'store' image data.  It can simply write based on passed parameters
 
-    private final Image temp_img;
+    private final Object temp_img;
     private MappedByteBuffer buffer;
 
     public memMapFromBuffer(Image temp_img_, MappedByteBuffer buffer_) {
+        temp_img = temp_img_;
+        buffer = buffer_;
+    }
+
+    public memMapFromBuffer(Object temp_img_, MappedByteBuffer buffer_) {
         temp_img = temp_img_;
         buffer = buffer_;
     }
@@ -76,16 +83,26 @@ public class memMapFromBuffer {
         }
     }
 
-    private byte[] convertToByte(Image tempImg_) throws UnsupportedOperationException {
+    private byte[] convertToByte(Object tempImg_) throws UnsupportedOperationException {
 //        long start = System.nanoTime();
         try
         {
             byte[] bytes;
-            Object pixels = tempImg_.getRawPixels();
+            Object pixels;
+
+            if (tempImg_ instanceof Image) {
+                Image im = (Image) tempImg_;
+                pixels = im.getRawPixels();
+            } else if (tempImg_ instanceof TaggedImage) {
+                TaggedImage tim = (TaggedImage)tempImg_;
+                pixels = tim.pix;
+            } else {
+                pixels = tempImg_;
+            }
+
             if (pixels instanceof byte[]) {
                 bytes = (byte[]) pixels;
-            }
-            else if (pixels instanceof short[]) {
+            } else if (pixels instanceof short[]) {
                 ShortBuffer shortPixels = ShortBuffer.wrap((short[]) pixels);
                 ByteBuffer dest = ByteBuffer.allocate(2 * ((short[]) pixels).length).order(ByteOrder.nativeOrder());
                 ShortBuffer shortDest = dest.asShortBuffer();
@@ -94,11 +111,10 @@ public class memMapFromBuffer {
 
             }
             else {
-                throw new UnsupportedOperationException("Unsupported pixel type");
+                throw new UnsupportedOperationException(String.format("Unsupported pixel type %s", pixels.getClass().toString()));
             }
 //            long stop = System.nanoTime();
 //            reporter.set_report_area("Time elapsed for CONVERT TO BYTE (cast) (ns): "+Long.toString(stop-start));
-
             return bytes;
 
         } catch (Exception ex) {
@@ -106,7 +122,6 @@ public class memMapFromBuffer {
         }
 //        long stop = System.nanoTime();
 //        reporter.set_report_area("Time elapsed for CONVERT TO BYTE (null) (ns): "+Long.toString(stop-start));
-
         return null;
     }
 

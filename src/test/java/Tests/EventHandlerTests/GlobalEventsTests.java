@@ -1,9 +1,12 @@
 package Tests.EventHandlerTests;
 
 import org.micromanager.LogManager;
+import org.micromanager.display.DataViewer;
 import org.micromanager.display.DisplayManager;
+import org.micromanager.display.internal.event.DataViewerAddedEvent;
 import org.micromanager.events.EventManager;
-import org.micromanager.events.NewDisplayEvent;
+//import org.micromanager.events.NewDisplayEvent;
+import org.mm2python.DataStructures.Constants;
 import org.mm2python.UI.reporter;
 import org.mm2python.mmEventHandler.globalEvents;
 import org.junit.jupiter.api.Test;
@@ -43,6 +46,8 @@ class GlobalEventsTests {
         DisplayManager dm = mock(DisplayManager.class);
         when(mm.displays()).thenReturn(dm);
         doNothing().when(dm).registerForEvents(globalEvents.class);
+
+        Constants.tempFilePath = "tempfilepath";
     }
 
     @Test
@@ -90,14 +95,16 @@ class GlobalEventsTests {
     }
 
     @Test
-    void testDisplayAboutToShow() {
+    void testNewDataViewer() {
 
-        NewDisplayEvent evt = mock(NewDisplayEvent.class);
-
+        DataViewerAddedEvent evt = mock(DataViewerAddedEvent.class);
+        DataViewer dv = mock(DataViewer.class);
+        when(evt.getDataViewer()).thenReturn(dv);
+        when(dv.toString()).thenReturn("DataViewer name");
         setUp();
 
         globalEvents ge = new globalEvents(mm);
 
-        ge.monitor_aboutToShow(evt);
+        ge.newDataViewer(evt);
     }
 }
