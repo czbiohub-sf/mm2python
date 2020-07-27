@@ -155,10 +155,15 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     /**
      * send the first image (as determined by MDS Queue) out via zeroMQ port
      */
-    public void sendFirstImage() {
-        MetaDataStore mds = this.getFirstMeta();
-        Object rawpixels = mds.getImage();
-        zeroMQ.send(rawpixels);
+    public boolean sendFirstImage() {
+        try {
+            MetaDataStore mds = this.getFirstMeta();
+            Object rawpixels = mds.getImage();
+            zeroMQ.send(rawpixels);
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     /**
@@ -191,13 +196,13 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
                 zeroMQ.send(obj);
                 return true;
             } else {
-                reporter.set_report_area("object representing internal image Buffer is not an instance of Short[]");
+                reporter.set_report_area("object representing internal image Buffer is not an instance of Short[] or byte[]");
+                return false;
             }
         } catch (Exception ex) {
             reporter.set_report_area(ex.toString());
             return false;
         }
-        return false;
     }
 
     /**
