@@ -137,8 +137,6 @@ public class datastoreEvents {
 
             SummaryMetadata summary = event.getDataProvider().getSummaryMetadata();
 
-
-
             mmExecutor.execute(new datastoreEventsThread(
                     event.getDataProvider(),
                     event.getCoords(),

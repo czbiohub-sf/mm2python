@@ -66,7 +66,7 @@ public class FixedMemMapReferenceQueue {
      * check if is empty.  Should never be empty
      * @return : boolean
      */
-    public boolean nextFileNameExists() {
+    public static boolean nextFileNameExists() {
         return !mmap_filename_queue.isEmpty();
     }
 
@@ -75,7 +75,7 @@ public class FixedMemMapReferenceQueue {
      * for FILENAME
      * @return : String, head value
      */
-    public String getNextFileName() {
+    public static String getNextFileName() {
         String next = mmap_filename_queue.poll();
         mmap_filename_queue.offer(next);
         return next;
@@ -86,7 +86,7 @@ public class FixedMemMapReferenceQueue {
      * for MAPPED BYTE BUFFER
      * @return : MappedByteBuffer
      */
-    public MappedByteBuffer getNextBuffer() {
+    public static MappedByteBuffer getNextBuffer() {
         MappedByteBuffer buf = mmap_buffer_queue.poll();
         mmap_buffer_queue.offer(buf);
         return buf;

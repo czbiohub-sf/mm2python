@@ -15,10 +15,11 @@ import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import org.mm2python.MPIMethod.Py4J.Py4JListener;
-import org.mm2python.mmDataHandler.memMapFromBuffer;
 import org.mm2python.UI.reporter;
+import org.mm2python.mmDataHandler.memMapWriter;
 
 import java.nio.MappedByteBuffer;
+import java.security.InvalidParameterException;
 // todo: add more metadata values: file index, buffer_position, length
 
 /**
@@ -39,15 +40,11 @@ public class datastoreEventsThread implements Runnable {
 
     // variables for MetaDataStorage
     private final MetaDataStore mds;
-    private final MDSMap fds;
-    private final MDSQueue mq;
 
     // variables taken from circular queue
     private MappedByteBuffer buffer;
     private String filename;
     private int buffer_position = 0;
-    private FixedMemMapReferenceQueue fixed;
-    private DynamicMemMapReferenceQueue dynamic;
 
     /**
      * Executes sequence of tasks run by executor:
@@ -77,10 +74,6 @@ public class datastoreEventsThread implements Runnable {
 
         data = data_;
 
-        // queues
-        fixed = new FixedMemMapReferenceQueue();
-        dynamic = new DynamicMemMapReferenceQueue();
-
         // if using MDA, SummaryMetadata contains channel names
         // if using script, assume "Channel" group is the channel name
         try {
@@ -104,46 +97,54 @@ public class datastoreEventsThread implements Runnable {
 
             // evaluate fixed vs dynamic methods
             if (Constants.getFixedMemMap()) {
-                buffer = fixed.getNextBuffer();
+                buffer = FixedMemMapReferenceQueue.getNextBuffer();
                 buffer_position = 0;
             } else {
-                buffer = dynamic.getCurrentBuffer();
-                buffer_position = dynamic.getCurrentPosition();
+                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
             }
         }
 
         //create MetaDataStore for this object
         mds = makeMDS();
-        fds = new MDSMap();
-
-        mq = new MDSQueue();
     }
     
     @Override
     public void run() {
 
-        // Write memory mapped image
-        if(!Constants.getZMQButton()) {
-            writeToMemMap();
+        try {
+            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
+            // when we refactor this out, this problem will go away
+            if(!Constants.getZMQButton()) {
+                memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
+            }
+
+            MDSMap.putMDS(mds);
+
+            MDSQueue.putMDS(mds);
+
+        } catch (NoImageException nie) {
+            reporter.set_report_area("Attempted to write image, but no image data exists! "
+                    +nie.toString());
+        } catch (InvalidParameterException ipe) {
+            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "
+                    +ipe.toString());
+        } catch (NullPointerException npe){
+            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "
+                    +npe.toString());
+        } catch (Exception ex) {
+            reporter.set_report_area("General Exception during getCoreMeta "+ex.toString());
         }
-
-        // Write to concurrent hashmap
-        writeToHashMap();
-
-        // write filename to queue
-        // write MetaDataStore to queue
-        writeToQueues();
 
         // notify Listeners
         notifyListeners();
-
     }
 
     private String getFileName() {
         if(Constants.getFixedMemMap()) {
-                filename = fixed.getNextFileName();
+                filename = FixedMemMapReferenceQueue.getNextFileName();
             } else {
-                filename = dynamic.getCurrentFileName();
+                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
             }
             reporter.set_report_area("datastoreEventsThread MDA = "+filename);
 
@@ -165,7 +166,6 @@ public class datastoreEventsThread implements Runnable {
                     .channel_name(channel_name)
                     .filepath(filename)
                     .buffer_position(buffer_position)
-
 //                    .image(temp_img.getRawPixels())
                     .dataprovider(data)
                     .coord(coord)
@@ -177,47 +177,6 @@ public class datastoreEventsThread implements Runnable {
                     coord.getChannel(), coord.getZ(), coord.getStagePosition(), coord.getTime(), filename));
         }
         return null;
-    }
-
-    private void writeToMemMap() {
-        try {
-            reporter.set_report_area("datastoreEventsThread: writing memmap to (path, channel) =("+filename+", "+channel_name+")" );
-
-            if(Constants.getFixedMemMap()){
-                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
-
-                out.writeToMemMapAt(buffer_position);
-
-            } else {
-                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
-                out.writeToMemMapAt(buffer_position);
-            }
-
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("null ptr exception in datastoreEvents Thread");
-        } catch (NoImageException ex) {
-            reporter.set_report_area(ex.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area("EXCEPTION IN WRITE TO MEMMAP: "+ex.toString());
-        }
-    }
-
-    private void writeToHashMap() {
-        try {
-            fds.putMDS(mds);
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
-    }
-
-    private void writeToQueues() {
-        try {
-            mq.putMDS(mds);
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("null ptr exception writing to LinkedBlockingQueue");
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
     }
 
     private void notifyListeners() {
