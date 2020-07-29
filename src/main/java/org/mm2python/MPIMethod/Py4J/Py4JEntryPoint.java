@@ -48,7 +48,6 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         mm = mm_;
         mmc = mm_.getCMMCore();
         listener = new Py4JListener();
-
     }
 
     /**
@@ -249,15 +248,26 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         MetaDataStore mds = createMDS();
         MappedByteBuffer buffer = getNextBuffer();
 
-        // write to structures
         try {
-            writeToMemMap(objim, buffer, mds.getBufferPosition());
-        } catch(NullPointerException npe){
-            writeToMemMap(objim, buffer, 0);
+            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
+            // when we refactor this out, this problem will go away
+            if(!Constants.getZMQButton()) {
+                memMapWriter.writeToMemMap(objim, buffer, mds.getBufferPosition());
+            }
+            MDSMap.putMDS(mds);
+            MDSQueue.putMDS(mds);
+        } catch (NoImageException nie) {
+            reporter.set_report_area("Attempted to write image, but no image data exists! "
+                    +nie.toString());
+        } catch (InvalidParameterException ipe) {
+            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "
+                    +ipe.toString());
+        } catch (NullPointerException npe){
+            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "
+                    +npe.toString());
+        } catch (Exception ex) {
+            reporter.set_report_area("General Exception during getCoreMeta "+ex.toString());
         }
-        writeToHashMap(mds);
-        writeToQueues(mds);
-
         return mds;
     }
 
@@ -323,42 +333,6 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
             reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
         }
         return buffer;
-    }
-
-    private void writeToMemMap(Object data_, MappedByteBuffer buffer_, int buffer_position_) {
-        try {
-            memMapWriter.writeToMemMap(data_, buffer_, buffer_position_);
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("null ptr exception in datastoreEvents Thread");
-        } catch (NoImageException ex) {
-            reporter.set_report_area(ex.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area("EXCEPTION IN WRITE TO MEMMAP: "+ex.toString());
-        }
-    }
-
-    private void writeToHashMap(MetaDataStore mds_) {
-        try {
-            MDSMap.putMDS(mds_);
-        } catch (InvalidParameterException ipe) {
-            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "+ipe.toString());
-        } catch (NullPointerException npe) {
-            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "+npe.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
-    }
-
-    private void writeToQueues(MetaDataStore mds_) {
-        try {
-            MDSQueue.putMDS(mds_);
-        } catch (InvalidParameterException ipe) {
-            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore Queue: "+ipe.toString());
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("NullPointerException while writing to MetaDataStore Queue: "+ex.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
     }
 
     // ==========================================================================================

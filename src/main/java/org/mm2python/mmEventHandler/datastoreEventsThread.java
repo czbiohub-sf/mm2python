@@ -40,15 +40,11 @@ public class datastoreEventsThread implements Runnable {
 
     // variables for MetaDataStorage
     private final MetaDataStore mds;
-//    private final MDSMap fds;
-//    private final MDSQueue mq;
 
     // variables taken from circular queue
     private MappedByteBuffer buffer;
     private String filename;
     private int buffer_position = 0;
-//    private FixedMemMapReferenceQueue fixed;
-//    private DynamicMemMapReferenceQueue dynamic;
 
     /**
      * Executes sequence of tasks run by executor:
@@ -77,10 +73,6 @@ public class datastoreEventsThread implements Runnable {
         prefix = prefix_;
 
         data = data_;
-
-        // queues
-//        fixed = new FixedMemMapReferenceQueue();
-//        dynamic = new DynamicMemMapReferenceQueue();
 
         // if using MDA, SummaryMetadata contains channel names
         // if using script, assume "Channel" group is the channel name
@@ -115,29 +107,37 @@ public class datastoreEventsThread implements Runnable {
 
         //create MetaDataStore for this object
         mds = makeMDS();
-
-//        fds = new MDSMap();
-//        mq = new MDSQueue();
     }
     
     @Override
     public void run() {
 
-        // Write memory mapped image
-        if(!Constants.getZMQButton()) {
-            writeToMemMap();
+        try {
+            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
+            // when we refactor this out, this problem will go away
+            if(!Constants.getZMQButton()) {
+                memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
+            }
+
+            MDSMap.putMDS(mds);
+
+            MDSQueue.putMDS(mds);
+
+        } catch (NoImageException nie) {
+            reporter.set_report_area("Attempted to write image, but no image data exists! "
+                    +nie.toString());
+        } catch (InvalidParameterException ipe) {
+            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "
+                    +ipe.toString());
+        } catch (NullPointerException npe){
+            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "
+                    +npe.toString());
+        } catch (Exception ex) {
+            reporter.set_report_area("General Exception during getCoreMeta "+ex.toString());
         }
-
-        // Write to concurrent hashmap
-        writeToHashMap();
-
-        // write filename to queue
-        // write MetaDataStore to queue
-        writeToQueues();
 
         // notify Listeners
         notifyListeners();
-
     }
 
     private String getFileName() {
@@ -177,43 +177,6 @@ public class datastoreEventsThread implements Runnable {
                     coord.getChannel(), coord.getZ(), coord.getStagePosition(), coord.getTime(), filename));
         }
         return null;
-    }
-
-    private void writeToMemMap() {
-        try {
-            memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
-            reporter.set_report_area("datastoreEventsThread: writing memmap to (path, channel) =("+filename+", "+channel_name+")" );
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("null ptr exception in datastoreEvents Thread");
-        } catch (NoImageException ex) {
-            reporter.set_report_area(ex.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area("EXCEPTION IN WRITE TO MEMMAP: "+ex.toString());
-        }
-    }
-
-    private void writeToHashMap() {
-        try {
-            MDSMap.putMDS(mds);
-        } catch (InvalidParameterException ipe) {
-            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "+ipe.toString());
-        } catch (NullPointerException npe) {
-            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "+npe.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
-    }
-
-    private void writeToQueues() {
-        try {
-            MDSQueue.putMDS(mds);
-        } catch (InvalidParameterException ipe) {
-            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore Queue: "+ipe.toString());
-        } catch (NullPointerException ex) {
-            reporter.set_report_area("NullPointerException while writing to MetaDataStore Queue: "+ex.toString());
-        } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
-        }
     }
 
     private void notifyListeners() {
