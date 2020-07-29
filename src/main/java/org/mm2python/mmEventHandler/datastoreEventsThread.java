@@ -15,10 +15,11 @@ import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
 import org.mm2python.MPIMethod.Py4J.Py4JListener;
-import org.mm2python.mmDataHandler.memMapFromBuffer;
 import org.mm2python.UI.reporter;
+import org.mm2python.mmDataHandler.memMapWriter;
 
 import java.nio.MappedByteBuffer;
+import java.security.InvalidParameterException;
 // todo: add more metadata values: file index, buffer_position, length
 
 /**
@@ -39,15 +40,15 @@ public class datastoreEventsThread implements Runnable {
 
     // variables for MetaDataStorage
     private final MetaDataStore mds;
-    private final MDSMap fds;
-    private final MDSQueue mq;
+//    private final MDSMap fds;
+//    private final MDSQueue mq;
 
     // variables taken from circular queue
     private MappedByteBuffer buffer;
     private String filename;
     private int buffer_position = 0;
-    private FixedMemMapReferenceQueue fixed;
-    private DynamicMemMapReferenceQueue dynamic;
+//    private FixedMemMapReferenceQueue fixed;
+//    private DynamicMemMapReferenceQueue dynamic;
 
     /**
      * Executes sequence of tasks run by executor:
@@ -78,8 +79,8 @@ public class datastoreEventsThread implements Runnable {
         data = data_;
 
         // queues
-        fixed = new FixedMemMapReferenceQueue();
-        dynamic = new DynamicMemMapReferenceQueue();
+//        fixed = new FixedMemMapReferenceQueue();
+//        dynamic = new DynamicMemMapReferenceQueue();
 
         // if using MDA, SummaryMetadata contains channel names
         // if using script, assume "Channel" group is the channel name
@@ -104,19 +105,19 @@ public class datastoreEventsThread implements Runnable {
 
             // evaluate fixed vs dynamic methods
             if (Constants.getFixedMemMap()) {
-                buffer = fixed.getNextBuffer();
+                buffer = FixedMemMapReferenceQueue.getNextBuffer();
                 buffer_position = 0;
             } else {
-                buffer = dynamic.getCurrentBuffer();
-                buffer_position = dynamic.getCurrentPosition();
+                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
             }
         }
 
         //create MetaDataStore for this object
         mds = makeMDS();
-        fds = new MDSMap();
 
-        mq = new MDSQueue();
+//        fds = new MDSMap();
+//        mq = new MDSQueue();
     }
     
     @Override
@@ -141,9 +142,9 @@ public class datastoreEventsThread implements Runnable {
 
     private String getFileName() {
         if(Constants.getFixedMemMap()) {
-                filename = fixed.getNextFileName();
+                filename = FixedMemMapReferenceQueue.getNextFileName();
             } else {
-                filename = dynamic.getCurrentFileName();
+                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
             }
             reporter.set_report_area("datastoreEventsThread MDA = "+filename);
 
@@ -165,7 +166,6 @@ public class datastoreEventsThread implements Runnable {
                     .channel_name(channel_name)
                     .filepath(filename)
                     .buffer_position(buffer_position)
-
 //                    .image(temp_img.getRawPixels())
                     .dataprovider(data)
                     .coord(coord)
@@ -181,18 +181,8 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToMemMap() {
         try {
+            memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
             reporter.set_report_area("datastoreEventsThread: writing memmap to (path, channel) =("+filename+", "+channel_name+")" );
-
-            if(Constants.getFixedMemMap()){
-                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
-
-                out.writeToMemMapAt(buffer_position);
-
-            } else {
-                memMapFromBuffer out = new memMapFromBuffer(temp_img, buffer);
-                out.writeToMemMapAt(buffer_position);
-            }
-
         } catch (NullPointerException ex) {
             reporter.set_report_area("null ptr exception in datastoreEvents Thread");
         } catch (NoImageException ex) {
@@ -204,7 +194,11 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToHashMap() {
         try {
-            fds.putMDS(mds);
+            MDSMap.putMDS(mds);
+        } catch (InvalidParameterException ipe) {
+            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "+ipe.toString());
+        } catch (NullPointerException npe) {
+            reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "+npe.toString());
         } catch (Exception ex) {
             reporter.set_report_area(ex.toString());
         }
@@ -212,9 +206,11 @@ public class datastoreEventsThread implements Runnable {
 
     private void writeToQueues() {
         try {
-            mq.putMDS(mds);
+            MDSQueue.putMDS(mds);
+        } catch (InvalidParameterException ipe) {
+            reporter.set_report_area("InvalidParameterException while writing to MetaDataStore Queue: "+ipe.toString());
         } catch (NullPointerException ex) {
-            reporter.set_report_area("null ptr exception writing to LinkedBlockingQueue");
+            reporter.set_report_area("NullPointerException while writing to MetaDataStore Queue: "+ex.toString());
         } catch (Exception ex) {
             reporter.set_report_area(ex.toString());
         }

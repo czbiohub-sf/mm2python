@@ -4,6 +4,7 @@ import org.mm2python.DataStructures.Builders.MDSParamObject;
 import org.mm2python.DataStructures.Builders.MDSParameters;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.UI.reporter;
+import org.mockito.internal.matchers.Null;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class MDSQueue {
     }
 
     // methods to add/remove MetaDataStores from lbd
-    public void putMDS(MetaDataStore mds_) {
+    public static void putMDS(MetaDataStore mds_) {
         try {
             boolean result = mdsQueue.offer(mds_, 10, TimeUnit.MILLISECONDS);
             if(!result){
@@ -36,45 +37,45 @@ public class MDSQueue {
         }
     }
 
-    public boolean isQueueEmpty() {
+    public static boolean isQueueEmpty() {
         return mdsQueue.isEmpty();
     }
 
-    public MetaDataStore getFirstMDS() {
+    public static MetaDataStore getFirstMDS() {
         // should we use takeFirst()?  This will wait till mds available, while poll returns null
         // poll takes and removes
         return mdsQueue.pollFirst();
     }
 
-    public MetaDataStore getLastMDS() {
+    public static MetaDataStore getLastMDS() {
         // should we use takeLast()?  This will wait till mds available, while poll returns null
         // poll takes and removes
         return mdsQueue.pollLast();
     }
 
-    public MetaDataStore getFirstMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
+    public static MetaDataStore getFirstMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
         return traverseQueueAndRemove(mdsp, true);
     }
 
-    public MetaDataStore getLastMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
+    public static MetaDataStore getLastMDSByParam(MDSParameters mdsp) throws InvalidParameterException {
         return traverseQueueAndRemove(mdsp, false);
     }
 
-    public String getFirstFilenameByParam(MDSParameters mdsp) throws InvalidParameterException {
+    public static String getFirstFilenameByParam(MDSParameters mdsp) throws NullPointerException {
         MetaDataStore m = traverseQueueAndRemove(mdsp, true);
         try {
             return m.getFilepath();
         } catch(NullPointerException ne) {
-            return null;
+            throw new NullPointerException(ne.toString());
         }
     }
 
-    public String getLastFilenameByParam(MDSParameters mdsp) throws InvalidParameterException {
+    public static String getLastFilenameByParam(MDSParameters mdsp) throws NullPointerException {
         MetaDataStore m = traverseQueueAndRemove(mdsp, false);
         try {
             return m.getFilepath();
         } catch (NullPointerException ne) {
-            return null;
+            throw new NullPointerException(ne.toString());
         }
     }
 
@@ -93,7 +94,7 @@ public class MDSQueue {
      * @return : an MDS object
      * @throws InvalidParameterException : commented out for now
      */
-    private static MetaDataStore traverseQueue(MDSParameters mdsp_, boolean forward) throws InvalidParameterException{
+    private static MetaDataStore traverseQueue(MDSParameters mdsp_, boolean forward) throws InvalidParameterException {
         Iterator<MetaDataStore> itr;
         if(forward) {
             itr = mdsQueue.iterator();
@@ -123,11 +124,10 @@ public class MDSQueue {
                 }
             }
         }
-//        throw new InvalidParameterException("mdsQueue has no element matching that parameter");
         return null;
     }
 
-    private static MetaDataStore traverseQueueAndRemove(MDSParameters mdsp_, boolean forward) throws InvalidParameterException{
+    private static MetaDataStore traverseQueueAndRemove(MDSParameters mdsp_, boolean forward) throws InvalidParameterException {
         Iterator<MetaDataStore> itr;
         if(forward) {
             itr = mdsQueue.iterator();
@@ -172,7 +172,6 @@ public class MDSQueue {
                 }
             }
         }
-//        throw new InvalidParameterException("mdsQueue has no element matching that parameter");
         return null;
     }
 

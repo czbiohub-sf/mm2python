@@ -5,6 +5,7 @@ import org.mm2python.DataStructures.Builders.MDSParameters;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.UI.reporter;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,12 +48,11 @@ public class MDSMap {
      *  Behavior is like a set, but allows retrieval of the object
      * @param m : MetaDataStore object
      */
-    public void putMDS(MetaDataStore m) {
+    public static void putMDS(MetaDataStore m) throws NullPointerException {
         try {
             allData.put(m, m);
-        } catch(NullPointerException e) {
-            System.out.println("null MDS parameter" + e.toString());
-            reporter.set_report_area(true, true, true, "null MDS parameter "+e.toString());
+        } catch(NullPointerException npe) {
+            throw new NullPointerException("Exception while placing MDS parameter: "+npe.toString());
         }
     }
 
@@ -63,7 +63,7 @@ public class MDSMap {
      * @param m : MDS is hashed only on Z, P, T, C
      * @return : an MDS
      */
-    public MetaDataStore getMDS(MetaDataStore m) {
+    public static MetaDataStore getMDS(MetaDataStore m) {
         return allData.getOrDefault(m, null);
     }
 
@@ -76,7 +76,7 @@ public class MDSMap {
      * @param mp : MDSParameter object
      * @return : an arraylist of all MDS that match the parameters
      */
-    public ArrayList<MetaDataStore> getMDSByParams(MDSParameters mp) {
+    public static ArrayList<MetaDataStore> getMDSByParams(MDSParameters mp) throws InvalidParameterException {
         List<Boolean> boolList = new ArrayList<>();
         ArrayList<MDSParamObject> params = mp.getParams();
 
@@ -127,7 +127,7 @@ public class MDSMap {
      * @param mp : MDSParameter object
      * @return : an arraylist of all STRING that match the parameters
      */
-    public ArrayList<String> getFilenamesByParams(MDSParameters mp) {
+    public static ArrayList<String> getFilenamesByParams(MDSParameters mp) throws InvalidParameterException {
         List<Boolean> boolList = new ArrayList<>();
         ArrayList<MDSParamObject> params = mp.getParams();
 
@@ -171,7 +171,7 @@ public class MDSMap {
         return mds;
     }
 
-    private boolean areAllTrue(List<Boolean> array){
+    private static boolean areAllTrue(List<Boolean> array){
         for(boolean b : array) if(!b) return false;
         return true;
     }
