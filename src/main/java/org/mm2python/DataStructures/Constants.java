@@ -39,6 +39,7 @@ public class Constants {
     public static long min;
     public static int init;
     public static volatile int data_mismatches;
+    private static int tempfiles;
 
     static {
         try {
@@ -107,5 +108,12 @@ public class Constants {
         return zmqButton;
     }
 
+    public static int getNumTempFiles(){
+        return tempfiles;
+    }
+
+    public static void setNumTempFiles(int num_){
+        tempfiles = num_;
+    }
 
 }

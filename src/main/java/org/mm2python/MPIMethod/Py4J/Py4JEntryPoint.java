@@ -6,13 +6,14 @@
 package org.mm2python.MPIMethod.Py4J;
 
 import mmcorej.TaggedImage;
+import org.micromanager.data.Image;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
 import org.mm2python.DataStructures.Builders.MDSParamBuilder;
 import org.mm2python.DataStructures.Builders.MDSParameters;
 import org.mm2python.DataStructures.Constants;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.MetaDataStore;
-import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
+//import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
@@ -26,6 +27,8 @@ import org.mm2python.mmDataHandler.memMapWriter;
 import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
@@ -225,15 +228,64 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDS();
+        return checkMDS(MDSQueue.getLastMDS());
     }
 
     public MetaDataStore getFirstMeta() {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDS();
+        return checkMDS(MDSQueue.getFirstMDS());
     }
+
+    private MetaDataStore checkMDS(MetaDataStore mds_) {
+
+        if(mds_.getFilepath() == null && mds_.getDataProvider() != null) {
+            // mds was acquired by "on demand" method
+            // we must write it to the next mem map file and modify the MDS
+            try{
+                if(FixedMemMapReferenceQueue.isFileQueueEmpty()){
+                    FixedMemMapReferenceQueue.createFileNames(Constants.getNumTempFiles());
+                }
+            } catch(FileNotFoundException FNF) {
+                reporter.set_report_area("FileNotFound while creating memory mapped files");
+            }
+            MappedByteBuffer buffer = FixedMemMapReferenceQueue.getNextBuffer();
+            String filename = FixedMemMapReferenceQueue.getNextFileName();
+
+            try {
+                Image im = mds_.getDataProvider().getImage(mds_.getCoord());
+                memMapWriter.writeToMemMap(im, buffer, 0);
+                return new MDSBuilder()
+                        .position(mds_.getPosition())
+                        .time(mds_.getTime())
+                        .z(mds_.getZ())
+                        .channel(mds_.getChannel())
+                        .xRange(mds_.getxRange())
+                        .yRange(mds_.getyRange())
+                        .bitDepth(mds_.getBitDepth())
+                        .prefix(mds_.getPrefix())
+                        .windowname(mds_.getWindowName())
+                        .channel_name(mds_.getChannelName())
+                        .filepath(filename)
+                        .buffer_position(mds_.getBufferPosition())
+                        .dataprovider(mds_.getDataProvider())
+                        .coord(mds_.getCoord())
+                        .summaryMetadata(mds_.getSummaryMetadata())
+                        .buildMDS();
+
+            } catch (IOException ioe) {
+                reporter.set_report_area("IOException while getting image from DataProvider: " + ioe.toString());
+            } catch (NoImageException nie) {
+                reporter.set_report_area("NoImageException while writing image to memory mapped file");
+            } catch (IllegalAccessException ilex) {
+                reporter.set_report_area(String.format("Fail to build MDS for c%d, z%d, p%d, t%d, filepath=%s",
+                        mds_.getChannel(), mds_.getZ(), mds_.getPosition(), mds_.getTime(), filename));
+            }
+        }
+        return mds_;
+    }
+
 
     // =============================================================================
 
@@ -285,14 +337,15 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
         // evaluate data transfer method
         if(!Constants.getZMQButton()) {
+            filename = FixedMemMapReferenceQueue.getNextFileName();
             // assign filename based on type of queue or data source
-            if(Constants.getFixedMemMap()) {
-                filename = FixedMemMapReferenceQueue.getNextFileName();
-                buffer_position = 0;
-            } else {
-                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
-                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
-            }
+//            if(Constants.getFixedMemMap()) {
+//                filename = FixedMemMapReferenceQueue.getNextFileName();
+//                buffer_position = 0;
+//            } else {
+//                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
+//                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
+//            }
         } else {
             reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
         }
@@ -323,12 +376,13 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
         // evaluate data transfer method
         if(!Constants.getZMQButton()) {
+            buffer = FixedMemMapReferenceQueue.getNextBuffer();
             // assign filename based on type of queue or data source
-            if(Constants.getFixedMemMap()) {
-                buffer = FixedMemMapReferenceQueue.getNextBuffer();
-            } else {
-                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
-            }
+//            if(Constants.getFixedMemMap()) {
+//                buffer = FixedMemMapReferenceQueue.getNextBuffer();
+//            } else {
+//                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+//            }
         } else {
             reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
         }

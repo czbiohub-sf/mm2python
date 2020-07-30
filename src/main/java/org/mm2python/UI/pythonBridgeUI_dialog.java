@@ -1,21 +1,18 @@
 package org.mm2python.UI;
 
 // intelliJ libraries
-import com.google.common.eventbus.Subscribe;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 // org.mm2python libraries
 import org.micromanager.data.DataProvider;
-import org.micromanager.display.DataViewer;
-import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
-import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
+//import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.MPIMethod.Py4J.Py4J;
 import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
 import org.mm2python.Utilities.MovingAverageWindow;
@@ -28,8 +25,6 @@ import org.mm2python.mmEventHandler.globalEvents;
 // mm libraries
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
-import org.micromanager.data.Datastore;
-import org.mm2python.mmEventHandler.globalEventsThread;
 
 // java libraries
 import javax.swing.*;
@@ -41,9 +36,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 // todo: STOP monitor needs to unregister all registered data viewers and data providers.
 
@@ -81,7 +73,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private static CMMCore mmc;
     private Py4J gate;
     private globalEvents gevents;
-    private final tempPathFlush clearTempPath = new tempPathFlush(mm);
+//    private final tempPathManager clearTempPath = new tempPathManager(mm);
     private static final JFileChooser fc = new JFileChooser();
     private static File defaultTempPath;
 
@@ -110,6 +102,8 @@ public class pythonBridgeUI_dialog extends JFrame {
             }
         });
 
+        maxNumberOfFilesTextField.addActionListener(e -> maxNumberOfFilesTextFieldActionPerformed(e));
+
         nonUIInit(mm_, mmc_);
 
         initTempPath();
@@ -129,6 +123,7 @@ public class pythonBridgeUI_dialog extends JFrame {
             Constants.tempFilePath = defaultTempPath.toString();
             fc.setCurrentDirectory(defaultTempPath);
         }
+        Constants.setNumTempFiles(Integer.parseInt(maxNumberOfFilesTextField.getText()));
     }
 
     private void nonUIInit(Studio mm_, CMMCore mmc_) {
@@ -205,7 +200,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.set_report_area("monitoring global events");
 
         Constants.tempFilePath = guiTempFilePath.getText();
-//        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
+        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
         Constants.height = mm.getCMMCore().getImageHeight();
         Constants.width = mm.getCMMCore().getImageWidth();
 
@@ -226,18 +221,10 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (!Constants.getZMQButton()) {
             //3
             new FixedMemMapReferenceQueue();
-            new DynamicMemMapReferenceQueue();
 
             //4
             if (Constants.getFixedMemMap()) {
-                // CREATE FIXED CIRCULAR REFERENCE
-                int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
-                create_circular_map_reference(num);
-                reporter.set_report_area("creating fixed memory maps");
-            } else {
-                // CREATE DYNAMIC REFERENCE
-                create_dynamic_map_reference();
-                reporter.set_report_area("creating dynamic memory maps");
+                tempPathManager.createTempPathFiles(Constants.getNumTempFiles());
             }
         }
 
@@ -245,13 +232,10 @@ public class pythonBridgeUI_dialog extends JFrame {
         MainExecutor.getExecutor();
 
         //6
-        if (gevents == null) {
-            reporter.set_report_area("new global events");
-            gevents = new globalEvents(mm);
-        }
+        reporter.set_report_area("new global events");
+        gevents = new globalEvents(mm);
+        gevents.registerGlobalEvents();
 
-//        ExecutorService mmExecutor = MainExecutor.getExecutor();
-//
 //        //register all open windows for events
 //        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
 //            mmExecutor.execute(new globalEventsThread(mm, dv));
@@ -260,11 +244,6 @@ public class pythonBridgeUI_dialog extends JFrame {
         mm.events().registerForEvents(this);
         mm.getEventManager().registerForEvents(this);
     }
-
-//    @Subscribe
-//    private void testcls(AcquisitionStartedEvent evt) {
-//        reporter.set_report_area(true, true, true, "testcls triggered");
-//    }
 
     /**
      * Shutdown procedure:
@@ -282,10 +261,7 @@ public class pythonBridgeUI_dialog extends JFrame {
         reporter.set_report_area("STOP monitoring global events, clearing data store references");
 
         //1
-        if (gevents != null) {
-            gevents.unRegisterGlobalEvents();
-        }
-        gevents = null;
+        gevents.unRegisterGlobalEvents();
         //2
 //        shutdownAndAwaitTermination();
         //2b
@@ -298,9 +274,12 @@ public class pythonBridgeUI_dialog extends JFrame {
         MDSMap.clearMap();
         //5
         FixedMemMapReferenceQueue.resetQueues();
-        DynamicMemMapReferenceQueue.resetAll();
-        clearTempPath.clearTempPathContents();
+//        DynamicMemMapReferenceQueue.resetAll();
+        tempPathManager.clearTempPathContents();
         mm.live().getDisplay().requestToClose();
+
+        mm.events().unregisterForEvents(this);
+        mm.getEventManager().unregisterForEvents(this);
     }
 
     /**
@@ -308,23 +287,23 @@ public class pythonBridgeUI_dialog extends JFrame {
      * https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
      * *** shutdown causes problems upon restart, all submitted threads will be rejected ***
      */
-    private void shutdownAndAwaitTermination() {
-        ExecutorService mmExecutor = MainExecutor.getExecutor();
-        mmExecutor.shutdown();
-        try {
+//    private void shutdownAndAwaitTermination() {
+//        ExecutorService mmExecutor = MainExecutor.getExecutor();
+//        mmExecutor.shutdown();
+//        try {
+////            mmExecutor.shutdownNow();
+//            if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+//                mmExecutor.shutdownNow();
+//                if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
+//                    System.err.println("Executor thread pool did not terminate");
+//                    reporter.set_report_area("Executor thread pool did not terminate");
+//                }
+//            }
+//        } catch (InterruptedException ie) {
 //            mmExecutor.shutdownNow();
-            if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                mmExecutor.shutdownNow();
-                if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                    System.err.println("Executor thread pool did not terminate");
-                    reporter.set_report_area("Executor thread pool did not terminate");
-                }
-            }
-        } catch (InterruptedException ie) {
-            mmExecutor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-    }
+//            Thread.currentThread().interrupt();
+//        }
+//    }
 
     private void unregisterDatastores(ConcurrentHashMap<DataProvider, datastoreEvents> t) {
         ArrayList<datastoreEvents> l = new ArrayList<>(t.values());
@@ -333,37 +312,37 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
-    private void create_circular_map_reference(int num_) {
-        if (Constants.getFixedMemMap()) {
-            try {
-                FixedMemMapReferenceQueue.createFileNames(num_);
-            } catch (FileNotFoundException fex) {
-                reporter.set_report_area("exception creating circular memmaps: " + fex.toString());
-            }
-        }
-    }
+//    private void create_circular_map_reference(int num_) {
+//        if (Constants.getFixedMemMap()) {
+//            try {
+//                FixedMemMapReferenceQueue.createFileNames(num_);
+//            } catch (FileNotFoundException fex) {
+//                reporter.set_report_area("exception creating circular memmaps: " + fex.toString());
+//            }
+//        }
+//    }
 
-    private void create_dynamic_map_reference() {
-        if (!Constants.getFixedMemMap()) {
-            try {
-                int num_channels = mm.acquisitions().getAcquisitionSettings().channels.size();
-                int num_z = mm.acquisitions().getAcquisitionSettings().slices.size();
-                DynamicMemMapReferenceQueue.createFileNames(4, 30);
-            } catch (Exception ex) {
-                reporter.set_report_area("\t\tEXCEPTION RETRIEVING CHANNELS AND Z FOR DYNAMIC MMMAP");
-                int num_channels = 4;
-                int num_z = 30;
-                DynamicMemMapReferenceQueue.createFileNames(num_channels, num_z);
-            }
-        }
-    }
+//    private void create_dynamic_map_reference() {
+//        if (!Constants.getFixedMemMap()) {
+//            try {
+//                int num_channels = mm.acquisitions().getAcquisitionSettings().channels.size();
+//                int num_z = mm.acquisitions().getAcquisitionSettings().slices.size();
+////                DynamicMemMapReferenceQueue.createFileNames(4, 30);
+//            } catch (Exception ex) {
+//                reporter.set_report_area("\t\tEXCEPTION RETRIEVING CHANNELS AND Z FOR DYNAMIC MMMAP");
+//                int num_channels = 4;
+//                int num_z = 30;
+////                DynamicMemMapReferenceQueue.createFileNames(num_channels, num_z);
+//            }
+//        }
+//    }
 
     private void create_ramdiskActionPerformed(ActionEvent evt) {
         new ramDiskConstructor(mm);
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
-        clearTempPath.clearTempPathContents();
+        tempPathManager.clearTempPathContents();
     }
 
     private void destroy_ramdiskActionPerformed(ActionEvent evt) {
@@ -380,9 +359,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (memoryMappedFilesRadioButton.isSelected()) {
             Constants.setZMQButton(false);
             zeroMQRadioButton.setSelected(false);
+            tempPathManager.promptTempPathCreation();
         } else {
             Constants.setZMQButton(true);
             zeroMQRadioButton.setSelected(true);
+            tempPathManager.promptTempPathDeletion();
         }
     }
 
@@ -390,9 +371,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (zeroMQRadioButton.isSelected()) {
             Constants.setZMQButton(true);
             memoryMappedFilesRadioButton.setSelected(false);
+            tempPathManager.promptTempPathDeletion();
         } else {
             Constants.setZMQButton(false);
             memoryMappedFilesRadioButton.setSelected(true);
+            tempPathManager.promptTempPathCreation();
         }
     }
 
@@ -438,6 +421,10 @@ public class pythonBridgeUI_dialog extends JFrame {
         } else {
             reporter.systemout = false;
         }
+    }
+
+    private void maxNumberOfFilesTextFieldActionPerformed(ActionEvent evt) {
+        Constants.setNumTempFiles(Integer.parseInt(maxNumberOfFilesTextField.getText()));
     }
 
     {

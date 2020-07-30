@@ -41,15 +41,15 @@ public class globalEvents {
     public globalEvents(Studio mm_) {
         mm = mm_;
 
-        registerGlobalEvents();
-        reporter.set_report_area(true, false, false, "global events filename = "+Constants.tempFilePath);
+//        registerGlobalEvents();
+        reporter.set_report_area("global events filename = "+Constants.tempFilePath);
     }
 
     /**
      * Register this class for notifications from micro-manager.
      */
     public void registerGlobalEvents() {
-        reporter.set_report_area(true, true, true, "global register");
+        reporter.set_report_area("global register");
         mm.events().registerForEvents(this);
         mm.displays().registerForEvents(this);
 //        mm.getEventManager().registerForEvents(this);
@@ -62,6 +62,7 @@ public class globalEvents {
         reporter.set_report_area(true, false, false,"shutting down event monitoring and clearing dequeue references");
         reporter.set_report_area("shutting down global event monitoring");
         mm.events().unregisterForEvents(this);
+        mm.displays().unregisterForEvents(this);
     }
 
 //    /**

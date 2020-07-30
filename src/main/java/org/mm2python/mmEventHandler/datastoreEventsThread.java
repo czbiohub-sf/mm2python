@@ -10,7 +10,7 @@ import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
-import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
+//import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
@@ -91,18 +91,21 @@ public class datastoreEventsThread implements Runnable {
         }
 
         // evaluate data transfer method
-        if(!Constants.getZMQButton()) {
+        if(!Constants.getZMQButton() && Constants.getFixedMemMap()) {
             // assign filename based on type of queue or data source
             filename = getFileName();
-
+            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+            buffer_position = 0;
             // evaluate fixed vs dynamic methods
-            if (Constants.getFixedMemMap()) {
-                buffer = FixedMemMapReferenceQueue.getNextBuffer();
-                buffer_position = 0;
-            } else {
-                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
-                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
-            }
+//            if (Constants.getFixedMemMap()) {
+//                buffer = FixedMemMapReferenceQueue.getNextBuffer();
+//                buffer_position = 0;
+//            } else {
+//                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
+//                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
+//            }
+        } else if(!Constants.getZMQButton()) {
+            filename = null;
         }
 
         //create MetaDataStore for this object
@@ -113,9 +116,8 @@ public class datastoreEventsThread implements Runnable {
     public void run() {
 
         try {
-            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
-            // when we refactor this out, this problem will go away
-            if(!Constants.getZMQButton()) {
+            // do not call dynamic memmap reference -- dynamic is called only manually
+            if(!Constants.getZMQButton() && Constants.getFixedMemMap()) {
                 memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
             }
 
@@ -141,12 +143,14 @@ public class datastoreEventsThread implements Runnable {
     }
 
     private String getFileName() {
-        if(Constants.getFixedMemMap()) {
-                filename = FixedMemMapReferenceQueue.getNextFileName();
-            } else {
-                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
-            }
-            reporter.set_report_area("datastoreEventsThread MDA = "+filename);
+        filename = FixedMemMapReferenceQueue.getNextFileName();
+//        if(Constants.getFixedMemMap()) {
+//                filename = FixedMemMapReferenceQueue.getNextFileName();
+//            }
+//            else {
+//                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
+//            }
+        reporter.set_report_area("datastoreEventsThread MDA = "+filename);
 
         return filename;
     }

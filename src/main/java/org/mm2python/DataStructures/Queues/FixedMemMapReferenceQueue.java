@@ -46,7 +46,7 @@ public class FixedMemMapReferenceQueue {
         }
 
         // create num amount of blank mmaps
-        if (Constants.getFixedMemMap()) {
+//        if (Constants.getFixedMemMap()) {
             for (int i = 0; i < num; i++) {
                 String fixedMapName = Constants.tempFilePath + "/mmap_fixed_" + i+".dat";
 
@@ -57,7 +57,7 @@ public class FixedMemMapReferenceQueue {
                 mmap_buffer_queue.add(buf);
 
             }
-        }
+//        }
     }
 
     // =================== GETTERS for filename, buffer, filechannel ===============
@@ -92,30 +92,38 @@ public class FixedMemMapReferenceQueue {
         return buf;
     }
 
+    public static boolean isFileQueueEmpty() {
+        return mmap_filename_queue.isEmpty();
+    }
+
+    public static boolean isMapQueueEmpty() {
+        return mmap_buffer_queue.isEmpty();
+    }
+
     // =============== WRITE TO FILE METHODS ==================
 
-    /**
-     * create blank MMap based on supplied byte length
-     * @param filename : String, path and filename to temp/MMapFile
-     * @param length : int, length in bytes to allocate
-     */
-    private static void writeBlankToMemMap(String filename, int length) throws FileNotFoundException {
-        byte[] bytearray = new byte[length];
-
-        File file = new File(filename);
-        file.delete();
-
-        // write data as memmap to memmap file
-        try (   FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel())
-        {
-            MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, length);
-            buffer.put(bytearray);
-        } catch (FileNotFoundException ex) {
-            throw new FileNotFoundException(ex.toString());
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-    }
+//    /**
+//     * create blank MMap based on supplied byte length
+//     * @param filename : String, path and filename to temp/MMapFile
+//     * @param length : int, length in bytes to allocate
+//     */
+//    private static void writeBlankToMemMap(String filename, int length) throws FileNotFoundException {
+//        byte[] bytearray = new byte[length];
+//
+//        File file = new File(filename);
+//        file.delete();
+//
+//        // write data as memmap to memmap file
+//        try (   FileChannel fileChannel = new RandomAccessFile(file, "rw").getChannel())
+//        {
+//            MappedByteBuffer buffer = fileChannel.map(FileChannel.MapMode.READ_WRITE, 0, length);
+//            buffer.put(bytearray);
+//        } catch (FileNotFoundException ex) {
+//            throw new FileNotFoundException(ex.toString());
+//        } catch (Exception e) {
+//            System.out.println(e.toString());
+//        }
+//    }
 
     /**
      * create blank MMap based on supplied byte length.
