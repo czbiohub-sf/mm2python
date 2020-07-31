@@ -61,25 +61,25 @@ public class datastoreEvents {
 
         reporter.set_report_area("datastoreEvent: registered this MDA datastore, prefix: "+data.toString()+" "+prefix_);
 
-        // writes any data existing in window before draw.
-        if(data.getNumImages() > 0){
-            Iterable<Coords> itercoords = data.getUnorderedImageCoords();
-            for (Coords c: itercoords) {
-                reporter.set_report_area("datastoreEvent: existing images in datastore before window rendered: "+c.toString());
-                try {
-                    mmExecutor.execute(new datastoreEventsThread(data,
-                            c,
-                            data.getImage(c),
-                            data.getSummaryMetadata(),
-                            "",
-                            mm.acquisitions().getAcquisitionSettings().prefix,
-                            window_name)
-                    );
-                } catch (Exception ex) {
-                    System.out.println(ex.toString());
-                }
-            }
-        }
+        // writes any data existing in window before window is drawn.
+//        if(data.getNumImages() > 0){
+//            Iterable<Coords> itercoords = data.getUnorderedImageCoords();
+//            for (Coords c: itercoords) {
+//                reporter.set_report_area("datastoreEvent: existing images in datastore before window rendered: "+c.toString());
+//                try {
+//                    mmExecutor.execute(new datastoreEventsThread(data,
+//                            c,
+//                            data.getImage(c),
+//                            data.getSummaryMetadata(),
+//                            "",
+//                            mm.acquisitions().getAcquisitionSettings().prefix,
+//                            window_name)
+//                    );
+//                } catch (Exception ex) {
+//                    System.out.println(ex.toString());
+//                }
+//            }
+//        }
         
     }
 

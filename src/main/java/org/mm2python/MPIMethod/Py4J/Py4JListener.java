@@ -18,9 +18,9 @@ public class Py4JListener {
     
     private static List<Py4JListenerInterface> listeners = new ArrayList<Py4JListenerInterface>();
 
-//    public Py4JListener() {
-//        System.out.println("constructing the listener");
-//    }
+    public static int numberListeners(){
+        return listeners.size();
+    }
     
     //================ Listener methods =================================//
     

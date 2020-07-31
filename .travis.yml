@@ -9,16 +9,19 @@
 
 #gem 'coveralls', require: false
 
-language: java
+#language: java
+
 #install: true
 
-jdk:
-  - openjdk8
+#
+#jdk:
+#  - openjdk8
 
 #cache:
 #  directories:
 #    - $HOME/.gradle
 
-script: ./gradlew build --scan -s --full-stacktrace
+#script: ./gradlew build --scan -s --full-stacktrace
+
 #
 #install: ./gradlew assemble --stacktrace

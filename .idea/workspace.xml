@@ -6,13 +6,21 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="e421f848-deba-43b3-bb31-6108bcbf8ca4" name="Default" comment="">
+    <list default="true" id="e421f848-deba-43b3-bb31-6108bcbf8ca4" name="Default" comment="added methods to send TaggedImage (from mmCore) by zmq or by memory maps">
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileContent/fileContent.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.2/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/libs/mm2python_v0.0.2.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build/libs/mm2python_v0.0.2.jar" beforeDir="false" afterPath="$PROJECT_DIR$/build/libs/mm2python_v0.0.2.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapFromBuffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapFromBuffer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsThreadTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsThreadTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathFlush.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.gradle/" />
     <ignored path="$PROJECT_DIR$/build/" />
@@ -91,39 +99,57 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Py4JEntryPoint.java" pinned="false" current-in-tab="true">
+    <leaf>
+      <file leaf-file-name="Py4JEntryPoint.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="404">
-              <caret line="284" lean-forward="true" selection-start-line="284" selection-end-line="284" />
+            <state relative-caret-position="460">
+              <caret line="209" column="23" lean-forward="true" selection-start-line="209" selection-start-column="23" selection-end-line="209" selection-end-column="23" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MDSMapTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSMapTest.java">
+      <file leaf-file-name="MDSQueue.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="393">
-              <caret line="123" column="28" lean-forward="true" selection-start-line="123" selection-start-column="28" selection-end-line="123" selection-end-column="28" />
+            <state relative-caret-position="184">
+              <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="memMapFromBuffer.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapFromBuffer.java">
+      <file leaf-file-name="MDSMap.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/MDSMap.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="90" column="25" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="25" />
+            <state relative-caret-position="150">
+              <caret line="10" column="22" lean-forward="true" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MetaDataStore.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/MetaDataStore.java">
+      <file leaf-file-name="tempPathManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="371">
-              <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+            <state relative-caret-position="210">
+              <caret line="18" column="3" lean-forward="true" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="pythonBridgeUI_dialog.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="518">
+              <caret line="217" column="16" selection-start-line="217" selection-start-column="16" selection-end-line="217" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FixedMemMapReferenceQueue.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="480">
+              <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -143,36 +169,36 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>start_monitor</find>
-      <find>systemout</find>
-      <find>console</find>
-      <find>creating zero</find>
-      <find>getlast</find>
-      <find>getlastmdsbyparam</find>
-      <find>getLastMetaByChannelName</find>
-      <find>radiobutton</find>
-      <find>&lt;</find>
-      <find>foreach</find>
-      <find>each</find>
-      <find>for</find>
-      <find>temp_img</find>
-      <find>gate</find>
-      <find>getLastFileBy</find>
-      <find>getlastFileByChannelIn</find>
-      <find>summary</find>
-      <find>build</find>
-      <find>zmqButt</find>
-      <find>zeroMQRadio</find>
-      <find>Constants</find>
-      <find>dataviewer</find>
-      <find>new global events</find>
-      <find>this.image</find>
       <find>getLastMeta</find>
       <find>memMapFromBuffer</find>
       <find>getnextFilename</find>
       <find>global events filename</find>
       <find>displayWindow</find>
       <find>getMeta</find>
+      <find>zeroMQ</find>
+      <find>fixed</find>
+      <find>MappedByte</find>
+      <find>getImage</find>
+      <find>InvalidParameter</find>
+      <find>mdsparamobject</find>
+      <find>MDSQUEUE</find>
+      <find>m.</find>
+      <find>new</find>
+      <find>writeToMemMap</find>
+      <find>dynamic</find>
+      <find>create_dynamic</find>
+      <find>createTemp</find>
+      <find>clear</find>
+      <find>maxNumberOf</find>
+      <find>Exception !!</find>
+      <find>register Global</find>
+      <find>register</find>
+      <find>unregisterData</find>
+      <find>global_events</find>
+      <find>shutdown</find>
+      <find>gevents</find>
+      <find>empty</find>
+      <find>width</find>
     </findStrings>
     <replaceStrings>
       <replace>reporter.set_</replace>
@@ -183,13 +209,15 @@
       <replace>(true, false, false,</replace>
       <replace>(true, true, true,</replace>
       <replace>new DynamicMemMapReferenceQueue();DynamicMemMapReferenceQueue.createFileNames(NUM_CHANNELS, NUM_Z);</replace>
+      <replace>MDSQueue.</replace>
+      <replace>MDSMap.</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="reuse_mm2_metadata" />
+        <entry key="$PROJECT_DIR$" value="memmap_refactor" />
       </map>
     </option>
   </component>
@@ -663,12 +691,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/Utilities/MovingAverage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/mmEventHandler/datastoreEventsThread.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/mmDataHandler/memMapFromBuffer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/DataStructures/Builders/MDSParamObject.java" />
-        <option value="$PROJECT_DIR$/src/main/java/mm2python/DataStructures/Maps/MDSMap.java" />
         <option value="$PROJECT_DIR$/src/main/java/mm2python/DataStructures/MetaDataStore.java" />
         <option value="$PROJECT_DIR$/src/main/java/mm2python/UI/pythonBridgeUI_dialog.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/OSTypeExceptionTest.java" />
@@ -678,8 +700,6 @@
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEventsThread.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/reporter.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/RegisteredDatastoresTests.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/MDSMap.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSQueueTests.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/run_ui.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/messengerInterface.java" />
@@ -692,28 +712,36 @@
         <option value="$PROJECT_DIR$/examples/mm2python_snap_live_display.py" />
         <option value="$PROJECT_DIR$/examples/mm2python_snap_live_display_monitor.py" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/DynamicMemMapReferenceQueue.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4J.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSMapTest.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.form" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/zeroMQ/zeroMQ.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilder.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilderBase.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/MetaDataStore.java" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/DatastoreEventsTests.java" />
-        <option value="$PROJECT_DIR$/src/test/java/Tests/MPIMethodTests/EntryPointTests.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
-        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapFromBuffer.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsTests.java" />
         <option value="$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsThreadTests.java" />
+        <option value="$PROJECT_DIR$/src/test/java/Tests/MPIMethodTests/EntryPointTests.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapImage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapWriter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/DynamicMemMapReferenceQueue.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/MDSMap.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/memMapFileDialog.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathFlush.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredDatastores.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java" />
         <option value="$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathManager.java" />
+        <option value="$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java" />
       </list>
     </option>
   </component>
@@ -737,11 +765,6 @@
             <path>
               <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
               <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-            </path>
-            <path>
-              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
-              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
@@ -778,6 +801,89 @@
               <item name="mm2python" type="462c0819:PsiDirectoryNode" />
               <item name="DataStructures" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="DataStructures" type="462c0819:PsiDirectoryNode" />
+              <item name="Exceptions" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="DataStructures" type="462c0819:PsiDirectoryNode" />
+              <item name="Maps" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="DataStructures" type="462c0819:PsiDirectoryNode" />
+              <item name="Queues" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="mmEventHandler" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="MPIMethod" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="MPIMethod" type="462c0819:PsiDirectoryNode" />
+              <item name="Py4J" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="MPIMethod" type="462c0819:PsiDirectoryNode" />
+              <item name="zeroMQ" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="mm2python" type="462c0819:PsiDirectoryNode" />
+              <item name="UI" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="mm2PythonBridge" type="b2602c69:ProjectViewProjectNode" />
+              <item name="mm2PythonBridge" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
@@ -790,6 +896,7 @@
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="mm2pythonbridge" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file:///Users/bryant.chhun/IdeaProjects/mm2PythonBridge/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java" />
     <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.SHOW" value="true" />
     <property name="UI_DESIGNER_EDITOR_MODE.PaletteManager.WIDTH" value="244" />
     <property name="UI_DESIGNER_EDITOR_MODE.UIDesignerToolWindowManager.SHOW" value="true" />
@@ -799,7 +906,7 @@
     <property name="project.structure.proportion" value="0.11405835" />
     <property name="project.structure.side.proportion" value="0.25860947" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="MoveMembersDialog.RECENTS_KEY">
@@ -835,7 +942,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JAR Application.Run_external_MM">
+  <component name="RunManager" selected="JUnit.All in mm2PythonBridge_test">
     <configuration name="PythonBridgeUI_Form" type="Application" factoryName="Application" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="UI.PythonBridgeUI_Form" />
       <module name="mm2PythonBridge_main" />
@@ -896,23 +1003,6 @@
         <option name="Gradle.BeforeRunTask" enabled="true" tasks="copyCoreToMM" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
       </method>
     </configuration>
-    <configuration name="All in mm2PythonBridge_test (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mm2PythonBridge_test" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <patterns />
-    </configuration>
     <configuration name="All in mm2PythonBridge_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mm2PythonBridge_test" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
@@ -930,19 +1020,65 @@
       </option>
       <patterns />
     </configuration>
-    <configuration name="GlobalEventsTests.testNewDataViewer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="EntryPointTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="mm2PythonBridge_test" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="Tests.EventHandlerTests.*" />
+          <option name="PATTERN" value="Tests.MPIMethodTests.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="Tests.EventHandlerTests" />
-      <option name="MAIN_CLASS_NAME" value="Tests.EventHandlerTests.GlobalEventsTests" />
-      <option name="METHOD_NAME" value="testNewDataViewer" />
+      <option name="PACKAGE_NAME" value="Tests.MPIMethodTests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.MPIMethodTests.EntryPointTests" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="EntryPointTests.testSendImageObj" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mm2PythonBridge_test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.MPIMethodTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="Tests.MPIMethodTests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.MPIMethodTests.EntryPointTests" />
+      <option name="METHOD_NAME" value="testSendImageObj" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration name="EntryPointTests.testSendImageTM" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="mm2PythonBridge_test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="Tests.MPIMethodTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" value="Tests.MPIMethodTests" />
+      <option name="MAIN_CLASS_NAME" value="Tests.MPIMethodTests.EntryPointTests" />
+      <option name="METHOD_NAME" value="testSendImageTM" />
       <option name="TEST_OBJECT" value="method" />
       <option name="VM_PARAMETERS" value="-ea" />
       <option name="PARAMETERS" />
@@ -964,29 +1100,6 @@
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="PACKAGE_NAME" value="Tests" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="METHOD_NAME" />
-      <option name="TEST_OBJECT" value="package" />
-      <option name="VM_PARAMETERS" value="-ea" />
-      <option name="PARAMETERS" />
-      <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
-      <option name="PASS_PARENT_ENVS" value="true" />
-      <option name="TEST_SEARCH_SCOPE">
-        <value defaultName="singleModule" />
-      </option>
-      <patterns />
-    </configuration>
-    <configuration name="Tests.EventHandlerTests in mm2PythonBridge_test" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="mm2PythonBridge_test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="Tests.EventHandlerTests.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <option name="PACKAGE_NAME" value="Tests.EventHandlerTests" />
       <option name="MAIN_CLASS_NAME" />
       <option name="METHOD_NAME" />
       <option name="TEST_OBJECT" value="package" />
@@ -1070,19 +1183,19 @@
       <item itemvalue="Groovy.build" />
       <item itemvalue="JAR Application.Run_external_MM" />
       <item itemvalue="Jupyter Notebook.mm2PythonBridge" />
-      <item itemvalue="JUnit.Tests.EventHandlerTests in mm2PythonBridge_test" />
       <item itemvalue="JUnit.Tests in mm2PythonBridge_test" />
-      <item itemvalue="JUnit.GlobalEventsTests.testNewDataViewer" />
-      <item itemvalue="JUnit.All in mm2PythonBridge_test (1)" />
+      <item itemvalue="JUnit.EntryPointTests.testSendImageTM" />
+      <item itemvalue="JUnit.EntryPointTests" />
+      <item itemvalue="JUnit.EntryPointTests.testSendImageObj" />
       <item itemvalue="JUnit.All in mm2PythonBridge_test" />
     </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.All in mm2PythonBridge_test" />
-        <item itemvalue="JUnit.All in mm2PythonBridge_test (1)" />
-        <item itemvalue="JUnit.GlobalEventsTests.testNewDataViewer" />
         <item itemvalue="JUnit.Tests in mm2PythonBridge_test" />
-        <item itemvalue="JUnit.Tests.EventHandlerTests in mm2PythonBridge_test" />
+        <item itemvalue="JUnit.EntryPointTests" />
+        <item itemvalue="JUnit.EntryPointTests.testSendImageTM" />
+        <item itemvalue="JUnit.EntryPointTests.testSendImageObj" />
       </list>
     </recent_temporary>
   </component>
@@ -1096,34 +1209,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1540254876883</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Reporter refactor:&#10;- created a singleton &quot;reporter&quot; class that enables reports to any combination of:&#10;System.out&#10;JTextArea (in this UI)&#10;micromanager logs&#10;&#10;Which of the three is determined by flags.&#10;Passing the JTextArea as a parameter is removed from many constructors (can be seen as bad practice, but we'll see)">
-      <created>1549576194592</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1549576194592</updated>
-    </task>
-    <task id="LOCAL-00005" summary="lots">
-      <created>1552600700950</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1552600700950</updated>
-    </task>
-    <task id="LOCAL-00006" summary="added lots more text outputs for debugging">
-      <created>1552688757407</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1552688757407</updated>
-    </task>
-    <task id="LOCAL-00007" summary="changed size of window">
-      <created>1552688825335</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1552688825335</updated>
     </task>
     <task id="LOCAL-00008" summary="added print statements">
       <created>1552688869048</created>
@@ -1440,38 +1525,66 @@
       <option name="project" value="LOCAL" />
       <updated>1595549958884</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="added methods to send TaggedImage (from mmCore) by zmq or by memory maps">
+      <created>1595636971978</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1595636971978</updated>
+    </task>
+    <task id="LOCAL-00054" summary="tests for entrypoint">
+      <created>1595889572740</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1595889572740</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Cleaned up usage of memmap writing&#10;- converted both reference queues to static classes&#10;- converted MDSQueue to static class&#10;- converted MDSMap to static class&#10;- focused the memmap writing to a single class: memMapWriter">
+      <created>1595981548173</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1595981548173</updated>
+    </task>
+    <task id="LOCAL-00056" summary="cleaned up some exception handling">
+      <created>1595985033353</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1595985033353</updated>
+    </task>
+    <option name="localTasksCounter" value="57" />
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Tests_EventHandlerTests_in_mm2PythonBridge_test - 2020.02.07 at 11h 45m 45s.xml">
-      <configuration name="Tests.EventHandlerTests in mm2PythonBridge_test" configurationId="JUnit" />
+    <history-entry file="EntryPointTests - 2020.07.27 at 15h 38m 11s.xml">
+      <configuration name="EntryPointTests" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="Tests_in_mm2PythonBridge_test - 2020.07.22 at 14h 00m 38s.xml">
+    <history-entry file="Tests_in_mm2PythonBridge_test - 2020.07.27 at 15h 38m 43s.xml">
       <configuration name="Tests in mm2PythonBridge_test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="GlobalEventsTests_testNewDataViewer - 2020.07.24 at 15h 03m 19s.xml">
-      <configuration name="GlobalEventsTests.testNewDataViewer" configurationId="JUnit" />
+    <history-entry file="Tests_in_mm2PythonBridge_test - 2020.07.28 at 13h 44m 00s.xml">
+      <configuration name="Tests in mm2PythonBridge_test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="GlobalEventsTests_testNewDataViewer - 2020.07.24 at 15h 04m 34s.xml">
-      <configuration name="GlobalEventsTests.testNewDataViewer" configurationId="JUnit" />
+    <history-entry file="EntryPointTests_testSendImageObj - 2020.07.28 at 13h 51m 22s.xml">
+      <configuration name="EntryPointTests.testSendImageObj" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="GlobalEventsTests_testNewDataViewer - 2020.07.24 at 15h 05m 57s.xml">
-      <configuration name="GlobalEventsTests.testNewDataViewer" configurationId="JUnit" />
+    <history-entry file="EntryPointTests_testSendImageObj - 2020.07.28 at 13h 51m 32s.xml">
+      <configuration name="EntryPointTests.testSendImageObj" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="GlobalEventsTests_testNewDataViewer - 2020.07.24 at 15h 11m 52s.xml">
-      <configuration name="GlobalEventsTests.testNewDataViewer" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_mm2PythonBridge_test_(1) - 2020.07.24 at 15h 14m 14s.xml">
-      <configuration name="All in mm2PythonBridge_test (1)" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_mm2PythonBridge_test_(1) - 2020.07.24 at 15h 24m 41s.xml">
-      <configuration name="All in mm2PythonBridge_test (1)" configurationId="JUnit" />
-    </history-entry>
-    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.24 at 15h 31m 43s.xml">
+    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.28 at 16h 08m 35s.xml">
       <configuration name="All in mm2PythonBridge_test" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.24 at 15h 32m 10s.xml">
+    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.28 at 16h 25m 53s.xml">
+      <configuration name="All in mm2PythonBridge_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.28 at 17h 10m 14s.xml">
+      <configuration name="All in mm2PythonBridge_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.28 at 17h 57m 16s.xml">
+      <configuration name="All in mm2PythonBridge_test" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="All_in_mm2PythonBridge_test - 2020.07.30 at 13h 09m 07s.xml">
       <configuration name="All in mm2PythonBridge_test" configurationId="JUnit" />
     </history-entry>
   </component>
@@ -1498,7 +1611,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="3" />
-      <window_info anchor="bottom" id="Debug" order="3" visible="true" weight="0.2892057" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.28886554" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.15478615" />
       <window_info anchor="bottom" id="Messages" order="12" weight="0.18737271" />
       <window_info anchor="right" id="Palette&#9;" order="7" />
@@ -1507,9 +1620,9 @@
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.47550586" weight="0.28309572" />
       <window_info anchor="bottom" id="Version Control" order="10" weight="0.06184799" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32983193" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17412141" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.171459" />
       <window_info anchor="bottom" id="sbt-shell-toolwindow" order="7" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49893504" weight="0.33808553" />
+      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49893504" weight="0.30753565" />
       <window_info id="Learn" order="6" />
       <window_info anchor="right" id="Gradle" order="6" weight="0.41391942" />
       <window_info anchor="right" id="Theme Preview" order="8" />
@@ -1570,10 +1683,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="remove old files" />
-    <MESSAGE value="reporter object now contains four parameters" />
-    <MESSAGE value="first python example" />
-    <MESSAGE value="towards travisCI" />
     <MESSAGE value="cleaner build script" />
     <MESSAGE value="Refactor:&#10;Datastructures:&#10;- Queues now hold MappedByteBuffers&#10;- Dynamic store now creates one large store and manages positions within&#10;  this store&#10;- fixed store is similar&#10;- MDS now contains a 'buffer_position' field&#10;&#10;Datahandler:&#10;- added memMapFromBuffer, which handles buffer writes&#10;&#10;Eventhandler:&#10;- adjusted names and removed special snap-live filename&#10;&#10;UI:&#10;- added fields to customize number of fixed memmap files&#10;- added radiobuttons to customize reporter output&#10;- greyed out ramdisk buttons&#10;-" />
     <MESSAGE value="added better shutdown monitor handling" />
@@ -1595,132 +1704,89 @@
     <MESSAGE value="allowed entrypoint functions to return null rather than nullptrexception" />
     <MESSAGE value="added the summary metadata object directly to the MetaDataStore class" />
     <MESSAGE value="added methods to entrypoint to send tagged images and internal image buffer to sockets" />
-    <option name="LAST_COMMIT_MESSAGE" value="added methods to entrypoint to send tagged images and internal image buffer to sockets" />
+    <MESSAGE value="added methods to send TaggedImage (from mmCore) by zmq or by memory maps" />
+    <MESSAGE value="tests for entrypoint" />
+    <MESSAGE value="Cleaned up usage of memmap writing&#10;- converted both reference queues to static classes&#10;- converted MDSQueue to static class&#10;- converted MDSMap to static class&#10;- focused the memmap writing to a single class: memMapWriter" />
+    <MESSAGE value="cleaned up some exception handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="cleaned up some exception handling" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java</url>
+          <line>117</line>
+          <properties />
+          <option name="timeStamp" value="205" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java</url>
+          <line>246</line>
+          <properties />
+          <option name="timeStamp" value="211" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="201" />
+      <option name="time" value="212" />
     </breakpoint-manager>
   </component>
   <component name="debuggerHistoryManager">
     <expressions id="evaluateExpression">
       <expression>
-        <expression-string>data_.getSummaryMetadata().</expression-string>
+        <expression-string>FixedMemMapReferenceQueue.createFileNames(10);</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data_.getSummaryMetadata()</expression-string>
+        <expression-string>FixedMemMapReferenceQueue.mmap_buffer_queue.peek()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data_</expression-string>
+        <expression-string>FixedMemMapReferenceQueue.mmap_buffer_queue.isEmpty()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>summary</expression-string>
+        <expression-string>FixedMemMapReferenceQueue.isFileQueueEmpty()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>data.getSummaryMetadata()</expression-string>
+        <expression-string>mm.getEventManager()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>mdslist.get(1)</expression-string>
+        <expression-string>mm.events()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>mdslist.get(0)</expression-string>
+        <expression-string>RegisteredDatastores.getSize()</expression-string>
+        <language-id>JAVA</language-id>
+        <custom-info>org.mm2python.DataStructures.Maps.RegisteredDatastores</custom-info>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>RegisteredDatastores.getSize()</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
       <expression>
-        <expression-string>mdslist.get(0);</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>mdslist.get(0); mdslist.get(1)</expression-string>
-        <language-id>JAVA</language-id>
-        <evaluation-mode>EXPRESSION</evaluation-mode>
-      </expression>
-      <expression>
-        <expression-string>mdslist.get(0), mdslist.get(1)</expression-string>
+        <expression-string>ep.sendImage(tm)</expression-string>
         <language-id>JAVA</language-id>
         <evaluation-mode>EXPRESSION</evaluation-mode>
       </expression>
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/examples/mm2python_basic.ipynb" />
-    <entry file="file://$PROJECT_DIR$/examples/python_basic.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/ConstantsTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-55">
-          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/DynamicMemMapReferenceQueueTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1301">
-          <caret line="246" column="38" selection-start-line="246" selection-start-column="38" selection-end-line="246" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home/src.zip!/java/lang/Runnable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="67" column="25" selection-start-line="67" selection-start-column="25" selection-end-line="67" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/mm2python_position_z_image_processing.ipynb">
-      <provider selected="true" editor-type-id="ipnb-editor">
-        <state>
-          <selected id="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/examples/mm2python_snap_live_display_monitor.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="810">
-          <caret line="54" column="89" selection-start-line="54" selection-start-column="89" selection-end-line="54" selection-end-column="89" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/examples/mm2python_snap_live_display.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="22" column="23" lean-forward="true" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/DynamicMemMapReferenceQueue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330">
-          <caret line="32" column="37" lean-forward="true" selection-start-line="32" selection-start-column="37" selection-end-line="32" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathFlush.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="28" column="59" selection-start-line="28" selection-start-column="59" selection-end-line="28" selection-end-column="59" />
         </state>
       </provider>
     </entry>
@@ -1732,22 +1798,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSBuilderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="30" lean-forward="true" selection-start-line="24" selection-start-column="30" selection-end-line="24" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/Executor/MainExecutor.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
           <caret line="20" column="46" selection-start-line="20" selection-start-column="46" selection-end-line="20" selection-end-column="46" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.form">
-      <provider selected="true" editor-type-id="ui-designer" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/mm2pythonGUIRunnable.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -1756,38 +1812,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/FixedMemMapReferenceQueueTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="423">
-          <caret line="30" column="11" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4J.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="28" column="7" lean-forward="true" selection-start-line="28" selection-start-column="7" selection-end-line="28" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/zeroMQ/zeroMQ.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="28" column="21" lean-forward="true" selection-start-line="28" selection-start-column="21" selection-end-line="28" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/DataPathInterface.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/displayEventsThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
         </state>
       </provider>
     </entry>
@@ -1836,94 +1864,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/DatastoreEventsTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilderBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" column="34" lean-forward="true" selection-start-line="16" selection-start-column="34" selection-end-line="16" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="248" column="55" selection-start-line="248" selection-start-column="38" selection-end-line="248" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="650">
-          <caret line="98" column="25" selection-start-line="98" selection-start-column="25" selection-end-line="98" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapImage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="727">
-          <caret line="75" column="37" selection-start-line="75" selection-start-column="37" selection-end-line="75" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="19" column="55" selection-start-line="19" selection-start-column="55" selection-end-line="19" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/reporter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="588">
           <caret line="49" selection-start-line="49" selection-end-line="49" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/MDSMap.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="589">
-          <caret line="40" selection-start-line="40" selection-end-line="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
-          <caret line="80" column="20" lean-forward="true" selection-start-line="80" selection-start-column="20" selection-end-line="80" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="50" selection-start-line="50" selection-end-line="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-52">
-          <caret line="115" column="11" selection-start-line="115" selection-start-column="8" selection-end-line="115" selection-end-column="11" />
         </state>
       </provider>
     </entry>
@@ -1934,31 +1878,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/MPIMethodTests/EntryPointTests.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="29" column="30" lean-forward="true" selection-start-line="29" selection-start-column="30" selection-end-line="29" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/GlobalEventsTests.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="721">
           <caret line="96" column="9" lean-forward="true" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="41" column="17" lean-forward="true" selection-start-line="41" selection-start-column="17" selection-end-line="41" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="206">
-          <caret line="36" column="50" lean-forward="true" selection-start-line="36" selection-start-column="50" selection-end-line="36" selection-end-column="50" />
         </state>
       </provider>
     </entry>
@@ -1969,38 +1892,244 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEventsThread.java">
+    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/FixedMemMapReferenceQueueTests.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="19" column="32" lean-forward="true" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
+        <state relative-caret-position="375">
+          <caret line="169" column="9" lean-forward="true" selection-start-line="169" selection-start-column="9" selection-end-line="169" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/EventHandlerTests/DatastoreEventsTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-505">
+          <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="88" column="69" lean-forward="true" selection-start-line="88" selection-start-column="69" selection-end-line="88" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSBuilderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="233">
+          <caret line="25" column="6" lean-forward="true" selection-start-line="25" selection-start-column="6" selection-end-line="25" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/DataPathInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="28" lean-forward="true" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/MPIMethodTests/EntryPointTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="658">
+          <caret line="65" column="16" lean-forward="true" selection-start-line="65" selection-start-column="16" selection-end-line="65" selection-end-column="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/MDSMapTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="393">
-          <caret line="123" column="28" lean-forward="true" selection-start-line="123" selection-start-column="28" selection-end-line="123" selection-end-column="28" />
+        <state relative-caret-position="1245">
+          <caret line="103" column="26" lean-forward="true" selection-start-line="103" selection-start-column="26" selection-end-line="103" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mm2PythonPlugin.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/ramDisk/ramDiskConstructor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/ramDisk/ramDiskDestructor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="12" column="7" lean-forward="true" selection-start-line="12" selection-start-column="7" selection-end-line="12" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Builders/MDSBuilderBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-249">
+          <caret line="24" column="27" selection-start-line="24" selection-start-column="12" selection-end-line="24" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/memMapFileDialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" column="28" lean-forward="true" selection-start-line="11" selection-start-column="28" selection-end-line="11" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapWriter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-7">
+          <caret line="23" column="29" lean-forward="true" selection-start-line="23" selection-start-column="29" selection-end-line="23" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/MetaDataStore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
+        <state relative-caret-position="326">
+          <caret line="30" lean-forward="true" selection-start-line="30" selection-end-line="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/displayEventsThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="25" column="4" lean-forward="true" selection-start-line="25" selection-start-column="4" selection-end-line="25" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/displayEvents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="311">
+          <caret line="42" column="7" lean-forward="true" selection-start-line="42" selection-start-column="7" selection-end-line="42" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEventsThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="40" column="37" selection-start-line="40" selection-start-column="37" selection-end-line="40" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.form">
+      <provider selected="true" editor-type-id="ui-designer" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/zeroMQ/zeroMQ.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredDatastores.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="3" lean-forward="true" selection-start-line="10" selection-start-column="3" selection-end-line="10" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEvents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="705">
+          <caret line="59" column="45" lean-forward="true" selection-start-line="59" selection-start-column="45" selection-end-line="59" selection-end-column="45" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmDataHandler/memMapFromBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="90" column="25" selection-start-line="90" selection-start-column="19" selection-end-line="90" selection-end-column="25" />
+        <state relative-caret-position="255">
+          <caret line="17" column="3" lean-forward="true" selection-start-line="17" selection-start-column="3" selection-end-line="17" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/RegisteredGlobalEvents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" lean-forward="true" selection-start-line="14" selection-end-line="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="423">
+          <caret line="111" selection-start-line="111" selection-end-line="111" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/globalEvents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="382">
+          <caret line="89" selection-start-line="89" selection-end-line="89" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/mmEventHandler/datastoreEventsThread.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-35">
+          <caret line="119" column="54" selection-start-line="119" selection-start-column="54" selection-end-line="119" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/tempPathManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="18" column="3" lean-forward="true" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/java/Tests/DataStructuresTests/DynamicMemMapReferenceQueueTests.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/DynamicMemMapReferenceQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="36" lean-forward="true" selection-start-line="27" selection-start-column="36" selection-end-line="27" selection-end-column="36" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/MPIMethod/Py4J/Py4JEntryPoint.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="404">
-          <caret line="284" lean-forward="true" selection-start-line="284" selection-end-line="284" />
+        <state relative-caret-position="460">
+          <caret line="209" column="23" lean-forward="true" selection-start-line="209" selection-start-column="23" selection-end-line="209" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/FixedMemMapReferenceQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="32" column="5" lean-forward="true" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/UI/pythonBridgeUI_dialog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="217" column="16" selection-start-line="217" selection-start-column="16" selection-end-line="217" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Queues/MDSQueue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="15" column="2" lean-forward="true" selection-start-line="15" selection-start-column="2" selection-end-line="15" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/org/mm2python/DataStructures/Maps/MDSMap.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="22" lean-forward="true" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
         </state>
       </provider>
     </entry>

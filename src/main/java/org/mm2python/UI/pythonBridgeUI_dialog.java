@@ -1,7 +1,6 @@
 package org.mm2python.UI;
 
 // intelliJ libraries
-import com.google.common.eventbus.Subscribe;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -9,16 +8,14 @@ import com.intellij.uiDesigner.core.Spacer;
 // org.mm2python libraries
 import org.micromanager.data.DataProvider;
 import org.micromanager.display.DataViewer;
-import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Maps.RegisteredDatastores;
+import org.mm2python.DataStructures.Maps.RegisteredGlobalEvents;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
-import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.MPIMethod.Py4J.Py4J;
 import org.mm2python.MPIMethod.zeroMQ.zeroMQ;
-import org.mm2python.Utilities.MovingAverageWindow;
 import org.mm2python.mmDataHandler.ramDisk.ramDiskConstructor;
 import org.mm2python.mmDataHandler.ramDisk.ramDiskDestructor;
 import org.mm2python.mmEventHandler.Executor.MainExecutor;
@@ -28,7 +25,6 @@ import org.mm2python.mmEventHandler.globalEvents;
 // mm libraries
 import mmcorej.CMMCore;
 import org.micromanager.Studio;
-import org.micromanager.data.Datastore;
 import org.mm2python.mmEventHandler.globalEventsThread;
 
 // java libraries
@@ -38,12 +34,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 
 // todo: STOP monitor needs to unregister all registered data viewers and data providers.
 
@@ -68,8 +60,8 @@ public class pythonBridgeUI_dialog extends JFrame {
     private JPanel Console;
     private JRadioButton fixedRadioButton;
     private JRadioButton dynamicRadioButton;
-    private JTextPane fixedWriteToATextPane;
-    private JTextPane dynamicWriteToATextPane;
+    private JTextPane continuousContinuouslyWriteToTextPane;
+    private JTextPane onDemandOnlyWriteTextPane;
     private JRadioButton consoleRadioButton;
     private JRadioButton MMCoreLogsRadioButton;
     private JRadioButton systemOutRadioButton;
@@ -81,7 +73,7 @@ public class pythonBridgeUI_dialog extends JFrame {
     private static CMMCore mmc;
     private Py4J gate;
     private globalEvents gevents;
-    private final tempPathFlush clearTempPath = new tempPathFlush(mm);
+    //    private final tempPathManager clearTempPath = new tempPathManager(mm);
     private static final JFileChooser fc = new JFileChooser();
     private static File defaultTempPath;
 
@@ -110,6 +102,8 @@ public class pythonBridgeUI_dialog extends JFrame {
             }
         });
 
+        maxNumberOfFilesTextField.addActionListener(e -> maxNumberOfFilesTextFieldActionPerformed(e));
+
         nonUIInit(mm_, mmc_);
 
         initTempPath();
@@ -129,6 +123,7 @@ public class pythonBridgeUI_dialog extends JFrame {
             Constants.tempFilePath = defaultTempPath.toString();
             fc.setCurrentDirectory(defaultTempPath);
         }
+        Constants.setNumTempFiles(Integer.parseInt(maxNumberOfFilesTextField.getText()));
     }
 
     private void nonUIInit(Studio mm_, CMMCore mmc_) {
@@ -141,14 +136,23 @@ public class pythonBridgeUI_dialog extends JFrame {
 
         // initialize Constants
         new Constants();
-        new MovingAverageWindow(10);
+//        new MovingAverageWindow(10);
 
         if (py4JRadioButton.isSelected()) {
             Constants.setPy4JRadioButton(true);
+        } else {
+            Constants.setPy4JRadioButton(false);
         }
-
-        Constants.setFixedMemMap(true);
-        Constants.setZMQButton(true);
+        if (fixedRadioButton.isSelected()) {
+            Constants.setFixedMemMap(true);
+        } else {
+            Constants.setFixedMemMap(false);
+        }
+        if (zeroMQRadioButton.isSelected()) {
+            Constants.setZMQButton(true);
+        } else {
+            Constants.setZMQButton(false);
+        }
         reporter.set_report_area("org.mm2python.UI INITIALIZATION filename = " + Constants.tempFilePath);
 
         // initialize MetaDataStore Map
@@ -202,75 +206,63 @@ public class pythonBridgeUI_dialog extends JFrame {
      * @param evt :
      */
     private void start_monitor_global_eventsActionPerformed(ActionEvent evt) {
-        reporter.set_report_area("monitoring global events");
-
+        if (RegisteredGlobalEvents.getSize() != 0) {
+            reporter.set_report_area("\n** mm2python already monitoring data **\n");
+            return;
+        }
+        reporter.set_report_area("\n===== STOP MONITORING DATA.  References cleared ===== \n");
         Constants.tempFilePath = guiTempFilePath.getText();
-//        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
+        Constants.bitDepth = mm.getCMMCore().getImageBitDepth();
         Constants.height = mm.getCMMCore().getImageHeight();
         Constants.width = mm.getCMMCore().getImageWidth();
 
         //1
         if ((defaultTempPath.exists() || defaultTempPath.mkdirs()) && !Constants.getZMQButton()) {
-            reporter.set_report_area("tempPath created or already exists at " + Constants.tempFilePath);
+            reporter.set_report_area("    tempPath created or already exists at " + Constants.tempFilePath);
         } else if (Constants.getZMQButton()) {
-            reporter.set_report_area("creating zeroMQ bridge");
+            reporter.set_report_area("    creating zeroMQ bridge");
             new zeroMQ();
         } else {
-            reporter.set_report_area("WARNING: invalid temp path, no MMap files will be made");
+            reporter.set_report_area("    WARNING: invalid temp path, no MMap files will be made");
         }
 
         //2
-        new MDSMap();
-        new MDSQueue();
+//        new MDSMap();
+//        new MDSQueue();
 
         if (!Constants.getZMQButton()) {
             //3
             new FixedMemMapReferenceQueue();
-            new DynamicMemMapReferenceQueue();
 
             //4
             if (Constants.getFixedMemMap()) {
-                // CREATE FIXED CIRCULAR REFERENCE
-                int num = Integer.parseInt(maxNumberOfFilesTextField.getText());
-                create_circular_map_reference(num);
-                reporter.set_report_area("creating fixed memory maps");
-            } else {
-                // CREATE DYNAMIC REFERENCE
-                create_dynamic_map_reference();
-                reporter.set_report_area("creating dynamic memory maps");
+                tempPathManager.createTempPathFiles(Constants.getNumTempFiles());
             }
         }
-
         //5
         MainExecutor.getExecutor();
 
         //6
-        if (gevents == null) {
-            reporter.set_report_area("new global events");
+        try {
             gevents = new globalEvents(mm);
+            gevents.registerGlobalEvents();
+            reporter.set_report_area("    new global events");
+        } catch (InterruptedException iex) {
+            reporter.set_report_area("    InterruptedException while initializing monitor: " + iex.toString());
         }
 
-//        ExecutorService mmExecutor = MainExecutor.getExecutor();
-//
 //        //register all open windows for events
-//        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
-//            mmExecutor.execute(new globalEventsThread(mm, dv));
-//        }
-
-        mm.events().registerForEvents(this);
-        mm.getEventManager().registerForEvents(this);
+        for (DataViewer dv : mm.getDisplayManager().getAllDataViewers()) {
+            reporter.set_report_area(String.format("\nmonitoring all data in viewer: %s", dv.getName()));
+            MainExecutor.getExecutor().execute(new globalEventsThread(mm, dv));
+        }
+        reporter.set_report_area("\n");
     }
-
-//    @Subscribe
-//    private void testcls(AcquisitionStartedEvent evt) {
-//        reporter.set_report_area(true, true, true, "testcls triggered");
-//    }
 
     /**
      * Shutdown procedure:
      * 1) unregister events
-     * 2) shutdown threads (not implemented)
-     * 2b) unregister datastores
+     * 2) unregister datastores
      * 3) call reset executors
      * 4) resetQueues MDSqueues and MDSmaps
      * 5) resetQueues memmap filesnames and references
@@ -278,17 +270,12 @@ public class pythonBridgeUI_dialog extends JFrame {
      * @param evt :
      */
     private void stop_monitor_global_eventsActionPerformed(ActionEvent evt) {
-        UI_logger_textArea.setText("");
-        reporter.set_report_area("STOP monitoring global events, clearing data store references");
+        reporter.set_report_area("\n\n ===== STOP MONITORING DATA.  References cleared ===== \n\n");
 
         //1
-        if (gevents != null) {
-            gevents.unRegisterGlobalEvents();
-        }
-        gevents = null;
+        gevents.unRegisterGlobalEvents();
+        RegisteredGlobalEvents.reset();
         //2
-//        shutdownAndAwaitTermination();
-        //2b
         unregisterDatastores(RegisteredDatastores.getMap());
         RegisteredDatastores.reset();
         //3
@@ -298,32 +285,9 @@ public class pythonBridgeUI_dialog extends JFrame {
         MDSMap.clearMap();
         //5
         FixedMemMapReferenceQueue.resetQueues();
-        DynamicMemMapReferenceQueue.resetAll();
-        clearTempPath.clearTempPathContents();
-        mm.live().getDisplay().requestToClose();
-    }
+        tempPathManager.clearTempPathContents();
 
-    /**
-     * shutdown procedure taken from:
-     * https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ExecutorService.html
-     * *** shutdown causes problems upon restart, all submitted threads will be rejected ***
-     */
-    private void shutdownAndAwaitTermination() {
-        ExecutorService mmExecutor = MainExecutor.getExecutor();
-        mmExecutor.shutdown();
-        try {
-//            mmExecutor.shutdownNow();
-            if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                mmExecutor.shutdownNow();
-                if (!mmExecutor.awaitTermination(5, TimeUnit.SECONDS)) {
-                    System.err.println("Executor thread pool did not terminate");
-                    reporter.set_report_area("Executor thread pool did not terminate");
-                }
-            }
-        } catch (InterruptedException ie) {
-            mmExecutor.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
+        mm.live().getDisplay().requestToClose();
     }
 
     private void unregisterDatastores(ConcurrentHashMap<DataProvider, datastoreEvents> t) {
@@ -333,37 +297,12 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
-    private void create_circular_map_reference(int num_) {
-        if (Constants.getFixedMemMap()) {
-            try {
-                FixedMemMapReferenceQueue.createFileNames(num_);
-            } catch (FileNotFoundException fex) {
-                reporter.set_report_area("exception creating circular memmaps: " + fex.toString());
-            }
-        }
-    }
-
-    private void create_dynamic_map_reference() {
-        if (!Constants.getFixedMemMap()) {
-            try {
-                int num_channels = mm.acquisitions().getAcquisitionSettings().channels.size();
-                int num_z = mm.acquisitions().getAcquisitionSettings().slices.size();
-                DynamicMemMapReferenceQueue.createFileNames(4, 30);
-            } catch (Exception ex) {
-                reporter.set_report_area("\t\tEXCEPTION RETRIEVING CHANNELS AND Z FOR DYNAMIC MMMAP");
-                int num_channels = 4;
-                int num_z = 30;
-                DynamicMemMapReferenceQueue.createFileNames(num_channels, num_z);
-            }
-        }
-    }
-
     private void create_ramdiskActionPerformed(ActionEvent evt) {
         new ramDiskConstructor(mm);
     }
 
     private void clear_ramdiskActionPerformed(ActionEvent evt) {
-        clearTempPath.clearTempPathContents();
+        tempPathManager.clearTempPathContents();
     }
 
     private void destroy_ramdiskActionPerformed(ActionEvent evt) {
@@ -380,9 +319,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (memoryMappedFilesRadioButton.isSelected()) {
             Constants.setZMQButton(false);
             zeroMQRadioButton.setSelected(false);
+            tempPathManager.promptTempPathCreation();
         } else {
             Constants.setZMQButton(true);
             zeroMQRadioButton.setSelected(true);
+            tempPathManager.promptTempPathDeletion();
         }
     }
 
@@ -390,9 +331,11 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (zeroMQRadioButton.isSelected()) {
             Constants.setZMQButton(true);
             memoryMappedFilesRadioButton.setSelected(false);
+            tempPathManager.promptTempPathDeletion();
         } else {
             Constants.setZMQButton(false);
             memoryMappedFilesRadioButton.setSelected(true);
+            tempPathManager.promptTempPathCreation();
         }
     }
 
@@ -400,6 +343,9 @@ public class pythonBridgeUI_dialog extends JFrame {
         if (fixedRadioButton.isSelected()) {
             Constants.setFixedMemMap(true);
             dynamicRadioButton.setSelected(false);
+            if (FixedMemMapReferenceQueue.isFileQueueEmpty()) {
+                tempPathManager.createTempPathFiles(Constants.getNumTempFiles());
+            }
         } else {
             Constants.setFixedMemMap(false);
             dynamicRadioButton.setSelected(true);
@@ -440,6 +386,10 @@ public class pythonBridgeUI_dialog extends JFrame {
         }
     }
 
+    private void maxNumberOfFilesTextFieldActionPerformed(ActionEvent evt) {
+        Constants.setNumTempFiles(Integer.parseInt(maxNumberOfFilesTextField.getText()));
+    }
+
     {
 // GUI initializer generated by IntelliJ IDEA GUI Designer
 // >>> IMPORTANT!! <<<
@@ -476,13 +426,13 @@ public class pythonBridgeUI_dialog extends JFrame {
         shutdown_python_bridge.setText("Shutdown Python Bridge");
         Console.add(shutdown_python_bridge, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         start_monitor_global_events = new JButton();
-        start_monitor_global_events.setText("START monitor");
+        start_monitor_global_events.setText("START Data Monitor");
         Console.add(start_monitor_global_events, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         stop_monitor_global_events = new JButton();
-        stop_monitor_global_events.setText("STOP monitor");
+        stop_monitor_global_events.setText("STOP Data Monitor");
         Console.add(stop_monitor_global_events, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         Configuration = new JPanel();
-        Configuration.setLayout(new GridLayoutManager(15, 4, new Insets(0, 0, 0, 0), -1, -1));
+        Configuration.setLayout(new GridLayoutManager(15, 5, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Configuration", Configuration);
         selectMessengerInterfaceLabel = new JLabel();
         selectMessengerInterfaceLabel.setText("Select Communication Method");
@@ -490,29 +440,29 @@ public class pythonBridgeUI_dialog extends JFrame {
         py4JRadioButton = new JRadioButton();
         py4JRadioButton.setSelected(true);
         py4JRadioButton.setText("Py4J");
-        Configuration.add(py4JRadioButton, new GridConstraints(1, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(py4JRadioButton, new GridConstraints(1, 0, 1, 5, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
         label1.setText("Select Memory Mapped File Mode");
-        Configuration.add(label1, new GridConstraints(11, 0, 1, 4, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        Configuration.add(label1, new GridConstraints(11, 0, 1, 5, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        Configuration.add(spacer1, new GridConstraints(10, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        Configuration.add(spacer1, new GridConstraints(10, 0, 1, 5, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         fixedRadioButton = new JRadioButton();
         fixedRadioButton.setSelected(true);
-        fixedRadioButton.setText("Fixed");
+        fixedRadioButton.setText("Continuous");
         Configuration.add(fixedRadioButton, new GridConstraints(12, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         dynamicRadioButton = new JRadioButton();
-        dynamicRadioButton.setText("Dynamic");
+        dynamicRadioButton.setText("On-Demand");
         Configuration.add(dynamicRadioButton, new GridConstraints(13, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        fixedWriteToATextPane = new JTextPane();
-        fixedWriteToATextPane.setEditable(false);
-        fixedWriteToATextPane.setSelectionColor(new Color(-8529665));
-        fixedWriteToATextPane.setText("Fixed: \nWrite to a fixed number of memory-mapped files (default 100).  Preserves disk space and has faster input-output speeds, but holds only the most recent 100 images");
-        Configuration.add(fixedWriteToATextPane, new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
-        dynamicWriteToATextPane = new JTextPane();
-        dynamicWriteToATextPane.setEditable(false);
-        dynamicWriteToATextPane.setSelectionColor(new Color(-365));
-        dynamicWriteToATextPane.setText("Dynamic: \nWrite to a growing number of memory-mapped files.  Every new image is mapped to its own file until cleared.  Occupies disk space and has slower input-output speeds, but allows data access of the whole acquisition.");
-        Configuration.add(dynamicWriteToATextPane, new GridConstraints(14, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        continuousContinuouslyWriteToTextPane = new JTextPane();
+        continuousContinuouslyWriteToTextPane.setEditable(false);
+        continuousContinuouslyWriteToTextPane.setSelectionColor(new Color(-8529665));
+        continuousContinuouslyWriteToTextPane.setText("Continuous: \nContinuously write to a fixed number of memory-mapped files (default 100).\nUseful for data streaming or quick feedback.");
+        Configuration.add(continuousContinuouslyWriteToTextPane, new GridConstraints(14, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
+        onDemandOnlyWriteTextPane = new JTextPane();
+        onDemandOnlyWriteTextPane.setEditable(false);
+        onDemandOnlyWriteTextPane.setSelectionColor(new Color(-365));
+        onDemandOnlyWriteTextPane.setText("On-Demand: \nOnly write data to memory-mapped files when requested.\nRequires that you specify image coordinates to pull exactly the data you want.");
+        Configuration.add(onDemandOnlyWriteTextPane, new GridConstraints(14, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(150, 50), null, 0, false));
         final JLabel label2 = new JLabel();
         label2.setText("Logging");
         Configuration.add(label2, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -529,29 +479,32 @@ public class pythonBridgeUI_dialog extends JFrame {
         Configuration.add(systemOutRadioButton, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         Configuration.add(spacer2, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        maxNumberOfFilesTextField = new JTextField();
-        maxNumberOfFilesTextField.setText("100");
-        Configuration.add(maxNumberOfFilesTextField, new GridConstraints(12, 2, 1, 1, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         memoryMappedFilesRadioButton = new JRadioButton();
-        memoryMappedFilesRadioButton.setSelected(false);
+        memoryMappedFilesRadioButton.setSelected(true);
         memoryMappedFilesRadioButton.setText("Memory Mapped Files");
         Configuration.add(memoryMappedFilesRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         zeroMQRadioButton = new JRadioButton();
-        zeroMQRadioButton.setSelected(true);
+        zeroMQRadioButton.setSelected(false);
         zeroMQRadioButton.setText("ZeroMQ");
         Configuration.add(zeroMQRadioButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Select Data Transfer Method");
         Configuration.add(label3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        maxNumberOfFilesTextField = new JTextField();
+        maxNumberOfFilesTextField.setText("100");
+        Configuration.add(maxNumberOfFilesTextField, new GridConstraints(13, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        final JLabel label4 = new JLabel();
+        label4.setText("Number of Memory Mapped Files");
+        Configuration.add(label4, new GridConstraints(12, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         DiskManagement = new JPanel();
         DiskManagement.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
         tabbedPane1.addTab("Disk Management", DiskManagement);
         clear_temp_folder = new JButton();
         clear_temp_folder.setText("Clear Temp Folder");
         DiskManagement.add(clear_temp_folder, new GridConstraints(0, 1, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label4 = new JLabel();
-        label4.setText("RAM Disk");
-        DiskManagement.add(label4, new GridConstraints(3, 0, 3, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 25), null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("RAM Disk");
+        DiskManagement.add(label5, new GridConstraints(3, 0, 3, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(58, 25), null, 0, false));
         destroy_ramdisk = new JButton();
         destroy_ramdisk.setEnabled(false);
         destroy_ramdisk.setText("Destroy RAM disk");
@@ -563,9 +516,9 @@ public class pythonBridgeUI_dialog extends JFrame {
         guiTempFilePath = new JTextField();
         guiTempFilePath.setText("/");
         DiskManagement.add(guiTempFilePath, new GridConstraints(1, 1, 3, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Tempfile Path");
-        DiskManagement.add(label5, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label6 = new JLabel();
+        label6.setText("Tempfile Path");
+        DiskManagement.add(label6, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

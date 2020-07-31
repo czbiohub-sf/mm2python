@@ -10,7 +10,6 @@ import org.mm2python.DataStructures.*;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
 import org.mm2python.DataStructures.Maps.MDSMap;
 import org.mm2python.DataStructures.Queues.FixedMemMapReferenceQueue;
-import org.mm2python.DataStructures.Queues.DynamicMemMapReferenceQueue;
 import org.mm2python.DataStructures.Queues.MDSQueue;
 import org.mm2python.mmDataHandler.Exceptions.NoImageException;
 import org.mm2python.MPIMethod.Py4J.Exceptions.Py4JListenerException;
@@ -91,18 +90,13 @@ public class datastoreEventsThread implements Runnable {
         }
 
         // evaluate data transfer method
-        if(!Constants.getZMQButton()) {
+        if(!Constants.getZMQButton() && Constants.getFixedMemMap()) {
             // assign filename based on type of queue or data source
-            filename = getFileName();
-
-            // evaluate fixed vs dynamic methods
-            if (Constants.getFixedMemMap()) {
-                buffer = FixedMemMapReferenceQueue.getNextBuffer();
-                buffer_position = 0;
-            } else {
-                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
-                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
-            }
+            filename = FixedMemMapReferenceQueue.getNextFileName();
+            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+            buffer_position = 0;
+        } else if(!Constants.getZMQButton()) {
+            filename = null;
         }
 
         //create MetaDataStore for this object
@@ -113,10 +107,10 @@ public class datastoreEventsThread implements Runnable {
     public void run() {
 
         try {
-            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
-            // when we refactor this out, this problem will go away
-            if(!Constants.getZMQButton()) {
+            // do not call dynamic memmap reference -- dynamic is called only manually
+            if(!Constants.getZMQButton() && Constants.getFixedMemMap()) {
                 memMapWriter.writeToMemMap(temp_img, buffer, buffer_position);
+                reporter.set_report_area("Writing data to MemoryMappedFile at: "+filename);
             }
 
             MDSMap.putMDS(mds);
@@ -138,17 +132,6 @@ public class datastoreEventsThread implements Runnable {
 
         // notify Listeners
         notifyListeners();
-    }
-
-    private String getFileName() {
-        if(Constants.getFixedMemMap()) {
-                filename = FixedMemMapReferenceQueue.getNextFileName();
-            } else {
-                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
-            }
-            reporter.set_report_area("datastoreEventsThread MDA = "+filename);
-
-        return filename;
     }
 
     private MetaDataStore makeMDS() {
@@ -181,8 +164,8 @@ public class datastoreEventsThread implements Runnable {
 
     private void notifyListeners() {
         try {
-            reporter.set_report_area("notifying py4j listeners");
-            if (Constants.getPy4JRadioButton()) {
+            if (Constants.getPy4JRadioButton() && Py4JListener.numberListeners() != 0) {
+                reporter.set_report_area("notifying py4j listeners");
                 Py4JListener.notifyAllListeners();
             }
         } catch (Py4JListenerException ex) {

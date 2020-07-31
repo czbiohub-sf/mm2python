@@ -4,7 +4,6 @@ import org.mm2python.DataStructures.Builders.MDSParamObject;
 import org.mm2python.DataStructures.Builders.MDSParameters;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.UI.reporter;
-import org.mockito.internal.matchers.Null;
 
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
