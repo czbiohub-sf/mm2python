@@ -6,10 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.micromanager.Studio;
 import org.micromanager.data.DataProvider;
 import org.mm2python.DataStructures.Builders.MDSBuilder;
+import org.mm2python.DataStructures.Constants;
 import org.mm2python.DataStructures.MetaDataStore;
 import org.mm2python.MPIMethod.Py4J.Py4JEntryPoint;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
@@ -21,7 +23,7 @@ class EntryPointTests {
     private Py4JEntryPoint ep;
     private Studio mm;
     private CMMCore mmc;
-    private MetaDataStore mds;
+    private MetaDataStore mds, mds_bad;
     private TaggedImage tm;
     private DataProvider provider;
     private short[] im1;
@@ -83,6 +85,18 @@ class EntryPointTests {
         assertFalse(ep.sendImage(im2));
         ep.sendImage(im3);
 
+    }
+
+    @Test
+    void testEPGetCoreMeta() {
+        setUp();
+        setupFakeData();
+
+        Constants.setZMQButton(true);
+        assertNull(ep.getCoreMeta(mds));
+
+//        Constants.setZMQButton(false);
+//        assertEquals(MetaDataStore.class, ep.getCoreMeta(mds).getClass());
     }
 
 }

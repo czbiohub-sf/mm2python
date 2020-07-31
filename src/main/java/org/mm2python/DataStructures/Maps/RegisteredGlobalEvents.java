@@ -3,7 +3,8 @@ package org.mm2python.DataStructures.Maps;
 import org.micromanager.data.DataProvider;
 import org.mm2python.mmEventHandler.globalEvents;
 
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * to keep track of globalEvents that are registered to EventBus
@@ -11,35 +12,35 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class RegisteredGlobalEvents {
 
-    private static ConcurrentHashMap<DataProvider, globalEvents> RegisteredGlobalEvents;
+    private static LinkedBlockingQueue<globalEvents> RegisteredGlobalEvents;
 
     static {
-        RegisteredGlobalEvents = new ConcurrentHashMap<>(100, 0.75f, 30);
+        RegisteredGlobalEvents = new LinkedBlockingQueue<>(1);
     }
 
-    public static void put(DataProvider ds, globalEvents de) {
-        RegisteredGlobalEvents.put(ds, de);
+    public static void put(globalEvents ge) throws InterruptedException {
+        RegisteredGlobalEvents.offer(ge, 1, TimeUnit.SECONDS);
     }
 
-    public static ConcurrentHashMap<DataProvider, globalEvents> getMap() {
-        return RegisteredGlobalEvents;
+    public static globalEvents get(globalEvents ge) {
+        return RegisteredGlobalEvents.peek();
     }
 
-    public static globalEvents get(DataProvider ds) {
-        return RegisteredGlobalEvents.get(ds);
-    }
-
-    public static void remove(DataProvider ds) {
-        RegisteredGlobalEvents.remove(ds);
+    public static void remove(globalEvents ge) {
+        RegisteredGlobalEvents.remove(ge);
     }
 
     public static void reset() {
         RegisteredGlobalEvents.clear();
         RegisteredGlobalEvents = null;
-        RegisteredGlobalEvents = new ConcurrentHashMap<>(100, 0.75f, 30);
+        RegisteredGlobalEvents = new LinkedBlockingQueue<>(1);
     }
 
     public static int getSize() {
         return RegisteredGlobalEvents.size();
+    }
+
+    public static LinkedBlockingQueue<globalEvents> getAllRegisteredGlobalEvents() {
+        return RegisteredGlobalEvents;
     }
 }

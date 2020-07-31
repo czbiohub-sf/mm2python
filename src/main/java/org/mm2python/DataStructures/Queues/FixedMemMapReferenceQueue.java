@@ -46,18 +46,16 @@ public class FixedMemMapReferenceQueue {
         }
 
         // create num amount of blank mmaps
-//        if (Constants.getFixedMemMap()) {
-            for (int i = 0; i < num; i++) {
-                String fixedMapName = Constants.tempFilePath + "/mmap_fixed_" + i+".dat";
+        for (int i = 0; i < num; i++) {
+            String fixedMapName = Constants.tempFilePath + "/mmap_fixed_" + i+".dat";
 
-                // write filename
-                mmap_filename_queue.add(fixedMapName);
+            // write filename
+            mmap_filename_queue.add(fixedMapName);
 
-                MappedByteBuffer buf = initializeMemMapBuffers(fixedMapName, bytelength);
-                mmap_buffer_queue.add(buf);
+            MappedByteBuffer buf = initializeMemMapBuffers(fixedMapName, bytelength);
+            mmap_buffer_queue.add(buf);
 
-            }
-//        }
+        }
     }
 
     // =================== GETTERS for filename, buffer, filechannel ===============

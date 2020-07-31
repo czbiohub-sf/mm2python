@@ -291,18 +291,24 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
 
 
     /**
-     * create MDS and based on next available memory mapped file name
-     * write this MDS to queues, maps and send it to user
+     * Core Images do not automatically generate MetaData Files.
+     *  - Creates MDS based on next available memory mapped file name
+     *  - write this MDS to queues/maps, and return this to users
      * @param objim : image Object of type Image, TaggedImage, or Object
      * @return MetaDataStore
      */
     public MetaDataStore getCoreMeta(Object objim) {
+
         MetaDataStore mds = createMDS();
-        MappedByteBuffer buffer = getNextBuffer();
+        MappedByteBuffer buffer = null;
+        if(!Constants.getZMQButton()) {
+            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+        } else {
+            reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
+            return null;
+        }
 
         try {
-            // the null pointer potential comes from mds.buffer_position defined based on dynamic memmap queue
-            // when we refactor this out, this problem will go away
             if(!Constants.getZMQButton()) {
                 memMapWriter.writeToMemMap(objim, buffer, mds.getBufferPosition());
             }
@@ -333,19 +339,10 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
     private MetaDataStore createMDS() {
         MetaDataStore mds_;
         String filename = null;
-        int buffer_position = 0;
 
         // evaluate data transfer method
         if(!Constants.getZMQButton()) {
             filename = FixedMemMapReferenceQueue.getNextFileName();
-            // assign filename based on type of queue or data source
-//            if(Constants.getFixedMemMap()) {
-//                filename = FixedMemMapReferenceQueue.getNextFileName();
-//                buffer_position = 0;
-//            } else {
-//                filename = DynamicMemMapReferenceQueue.getCurrentFileName();
-//                buffer_position = DynamicMemMapReferenceQueue.getCurrentPosition();
-//            }
         } else {
             reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
         }
@@ -354,7 +351,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         try {
             mds_ = new MDSBuilder()
                     .filepath(filename)
-                    .buffer_position(buffer_position)
+                    .buffer_position(0)
                     .xRange((int) mmc.getImageWidth())
                     .yRange((int) mmc.getImageHeight())
                     .bitDepth((int) mmc.getImageBitDepth())
@@ -366,28 +363,21 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return mds_;
     }
 
-    /**
-     * Query the Memory Mapped Reference Queues for the next available memmap file
-     *
-     * @return MappedByteBuffer : the next available memory mapped file
-     */
-    private MappedByteBuffer getNextBuffer() {
-        MappedByteBuffer buffer = null;
-
-        // evaluate data transfer method
-        if(!Constants.getZMQButton()) {
-            buffer = FixedMemMapReferenceQueue.getNextBuffer();
-            // assign filename based on type of queue or data source
-//            if(Constants.getFixedMemMap()) {
-//                buffer = FixedMemMapReferenceQueue.getNextBuffer();
-//            } else {
-//                buffer = DynamicMemMapReferenceQueue.getCurrentBuffer();
-//            }
-        } else {
-            reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
-        }
-        return buffer;
-    }
+//    /**
+//     * Query the Memory Mapped Reference Queues for the next available memmap file
+//     *
+//     * @return MappedByteBuffer : the next available memory mapped file
+//     */
+//    private MappedByteBuffer getNextBuffer() {
+//        MappedByteBuffer buffer = null;
+//        // evaluate data transfer method
+//        if(!Constants.getZMQButton()) {
+//            buffer = FixedMemMapReferenceQueue.getNextBuffer();
+//        } else {
+//            reporter.set_report_area("Data transfer mode is set to ZMQ not memory map");
+//        }
+//        return buffer;
+//    }
 
     // ==========================================================================================
 
@@ -397,7 +387,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDSByParam(params);
+        return checkMDS(MDSQueue.getLastMDSByParam(params));
     }
 
     @Override
@@ -406,7 +396,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDSByParam(params);
+        return checkMDS(MDSQueue.getLastMDSByParam(params));
     }
 
     @Override
@@ -415,7 +405,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDSByParam(params);
+        return checkMDS(MDSQueue.getLastMDSByParam(params));
     }
 
     @Override
@@ -424,7 +414,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDSByParam(params);
+        return checkMDS(MDSQueue.getLastMDSByParam(params));
     }
 
     @Override
@@ -433,7 +423,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getLastMDSByParam(params);
+        return checkMDS(MDSQueue.getLastMDSByParam(params));
     }
 
     @Override
@@ -443,7 +433,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDSByParam(params);
+        return checkMDS(MDSQueue.getFirstMDSByParam(params));
     }
 
     @Override
@@ -453,7 +443,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDSByParam(params);
+        return checkMDS(MDSQueue.getFirstMDSByParam(params));
     }
 
     @Override
@@ -463,7 +453,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDSByParam(params);
+        return checkMDS(MDSQueue.getFirstMDSByParam(params));
     }
 
     @Override
@@ -473,7 +463,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDSByParam(params);
+        return checkMDS(MDSQueue.getFirstMDSByParam(params));
     }
 
     @Override
@@ -483,19 +473,19 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         if(MDSQueue.isQueueEmpty()) {
             return null;
         }
-        return MDSQueue.getFirstMDSByParam(params);
+        return checkMDS(MDSQueue.getFirstMDSByParam(params));
     }
 
 //    public void removeFirstMetaByChannelName(String channelName) throws IllegalAccessException {
 //        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
 //
-//        MDSQueue.removeFirstMDSByParam(params);
+//        MDSQueue.removeFirstMDSByParam(params));
 //    }
 //
 //    public void removeLastMetaByChannelName(String channelName) throws IllegalAccessException {
 //        MDSParameters params = new MDSParamBuilder().channel_name(channelName).buildMDSParams();
 //
-//        MDSQueue.removeFirstMDSByParam(params);
+//        MDSQueue.removeFirstMDSByParam(params));
 //    }
 
     //============== Data Path interface methods ====================//

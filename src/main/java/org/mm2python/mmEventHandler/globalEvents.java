@@ -9,6 +9,8 @@ import org.micromanager.data.DataProviderHasNewImageEvent;
 import org.micromanager.display.internal.event.DataViewerAddedEvent;
 import org.micromanager.events.AcquisitionStartedEvent;
 import org.mm2python.DataStructures.Constants;
+import org.mm2python.DataStructures.Maps.RegisteredDatastores;
+import org.mm2python.DataStructures.Maps.RegisteredGlobalEvents;
 import org.mm2python.UI.reporter;
 import org.micromanager.Studio;
 
@@ -40,29 +42,24 @@ public class globalEvents {
      */
     public globalEvents(Studio mm_) {
         mm = mm_;
-
-//        registerGlobalEvents();
-        reporter.set_report_area("global events filename = "+Constants.tempFilePath);
     }
 
     /**
      * Register this class for notifications from micro-manager.
      */
-    public void registerGlobalEvents() {
-        reporter.set_report_area("global register");
+    public void registerGlobalEvents() throws InterruptedException {
         mm.events().registerForEvents(this);
         mm.displays().registerForEvents(this);
-//        mm.getEventManager().registerForEvents(this);
+        RegisteredGlobalEvents.put(this);
     }
 
     /**
      * Unregister this class for notifications from micro-manager
      */
     public void unRegisterGlobalEvents() {
-        reporter.set_report_area(true, false, false,"shutting down event monitoring and clearing dequeue references");
-        reporter.set_report_area("shutting down global event monitoring");
         mm.events().unregisterForEvents(this);
         mm.displays().unregisterForEvents(this);
+        RegisteredGlobalEvents.reset();
     }
 
 //    /**
@@ -87,8 +84,6 @@ public class globalEvents {
 
     @Subscribe
     public void newDataViewer(DataViewerAddedEvent event) {
-        System.out.println("NEW DATA VIEWER FROM GLOBAL ");
-        System.out.println("event = "+event.getDataViewer().toString());
         mmExecutor.execute(new globalEventsThread(mm, event.getDataViewer()));
     }
 
