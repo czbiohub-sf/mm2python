@@ -186,6 +186,17 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
             zeroMQ.send(rawpixels);
             return true;
         } catch (Exception ex) {
+            reporter.set_report_area("Exception sending TaggedImage to zmq socket: "+ex.toString());
+            return false;
+        }
+    }
+
+    public boolean sendImage(Image im) {
+        try {
+            zeroMQ.send(im.getRawPixels());
+            return true;
+        } catch (Exception ex) {
+            reporter.set_report_area("Exception sending Image to zmq socket: "+ex.toString());
             return false;
         }
     }
@@ -200,7 +211,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
                 return false;
             }
         } catch (Exception ex) {
-            reporter.set_report_area(ex.toString());
+            reporter.set_report_area("Exception sending short[] or byte[] object to zmq socket: "+ex.toString());
             return false;
         }
     }
@@ -238,6 +249,13 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
         return checkMDS(MDSQueue.getFirstMDS());
     }
 
+    /**
+     * If the supplied MDS was generated in "on demand" mode, it would not have a filepath but WILL have a datastore
+     *  this method will take the data, write it to a memory map, and return a new MDS that includes the filepath
+     *
+     * @param mds_: MetaDataStore
+     * @return MetaDataStore with filepath
+     */
     private MetaDataStore checkMDS(MetaDataStore mds_) {
 
         if(mds_.getFilepath() == null && mds_.getDataProvider() != null) {
@@ -252,6 +270,7 @@ public class Py4JEntryPoint implements DataMapInterface, DataPathInterface {
             }
             MappedByteBuffer buffer = FixedMemMapReferenceQueue.getNextBuffer();
             String filename = FixedMemMapReferenceQueue.getNextFileName();
+//            String filename = FixedMemMapReferenceQueue.getBufferFileName(buffer);
 
             try {
                 Image im = mds_.getDataProvider().getImage(mds_.getCoord());

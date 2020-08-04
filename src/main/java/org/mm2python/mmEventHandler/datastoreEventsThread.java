@@ -17,6 +17,7 @@ import org.mm2python.MPIMethod.Py4J.Py4JListener;
 import org.mm2python.UI.reporter;
 import org.mm2python.mmDataHandler.memMapWriter;
 
+import java.nio.BufferOverflowException;
 import java.nio.MappedByteBuffer;
 import java.security.InvalidParameterException;
 // todo: add more metadata values: file index, buffer_position, length
@@ -94,6 +95,7 @@ public class datastoreEventsThread implements Runnable {
             // assign filename based on type of queue or data source
             filename = FixedMemMapReferenceQueue.getNextFileName();
             buffer = FixedMemMapReferenceQueue.getNextBuffer();
+//            filename = FixedMemMapReferenceQueue.getBufferFileName(buffer);
             buffer_position = 0;
         } else if(!Constants.getZMQButton()) {
             filename = null;
@@ -123,11 +125,14 @@ public class datastoreEventsThread implements Runnable {
         } catch (InvalidParameterException ipe) {
             reporter.set_report_area("InvalidParameterException while writing to MetaDataStore HashMap: "
                     +ipe.toString());
-        } catch (NullPointerException npe){
+        } catch (NullPointerException npe) {
             reporter.set_report_area("NullPointerException while writing to MetaDataStore HashMap: "
-                    +npe.toString());
+                    + npe.toString());
+        } catch (BufferOverflowException boe) {
+            reporter.set_report_area("BufferOverflowException while writing to memmaps" +
+                    "\n  This is usually due to changes to camera settings after Data Monitor was initialized.  Stop-start Data Monitor and try again");
         } catch (Exception ex) {
-            reporter.set_report_area("General Exception during getCoreMeta "+ex.toString());
+            reporter.set_report_area("General Exception while writing to MemMaps "+ex.toString());
         }
 
         // notify Listeners

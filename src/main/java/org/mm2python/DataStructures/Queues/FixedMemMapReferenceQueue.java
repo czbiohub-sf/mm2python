@@ -7,7 +7,9 @@ import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.HashMap;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 /**
@@ -23,12 +25,17 @@ public class FixedMemMapReferenceQueue {
 
     private static Queue<MappedByteBuffer> mmap_buffer_queue = new ConcurrentLinkedDeque<>();
 
+    private static ConcurrentHashMap<MappedByteBuffer, String> mmap_buffer_filename_map;
+
     public static void resetQueues() {
         if(mmap_filename_queue != null){
             mmap_filename_queue.clear();
         }
         if(mmap_buffer_queue != null) {
             mmap_buffer_queue.clear();
+        }
+        if(mmap_buffer_filename_map != null) {
+            mmap_buffer_filename_map.clear();
         }
     }
 
@@ -38,6 +45,8 @@ public class FixedMemMapReferenceQueue {
      * @param num : number of blank MMaps
      */
     public static void createFileNames(int num) throws FileNotFoundException {
+        mmap_buffer_filename_map = new ConcurrentHashMap<>(num, 0.75f, 30);
+
         int bytelength = (int) ((Constants.bitDepth * Constants.width * Constants.height) / 8);
 
         File directory = new File(Constants.tempFilePath);
@@ -55,7 +64,14 @@ public class FixedMemMapReferenceQueue {
             MappedByteBuffer buf = initializeMemMapBuffers(fixedMapName, bytelength);
             mmap_buffer_queue.add(buf);
 
+//            mmap_buffer_filename_map.put(buf, fixedMapName);
+
         }
+
+    }
+
+    public static ConcurrentHashMap<MappedByteBuffer, String> getMap() {
+        return mmap_buffer_filename_map;
     }
 
     // =================== GETTERS for filename, buffer, filechannel ===============
@@ -80,6 +96,16 @@ public class FixedMemMapReferenceQueue {
     }
 
     /**
+     * given a buffer, find its corresponding memmap filename
+     * @param buf : MappedByteBuffer
+     * @return : String filepath
+     */
+    public static String getBufferFileName(MappedByteBuffer buf) {
+        return mmap_buffer_filename_map.get(buf);
+    }
+
+
+    /**
      * poll from head, place back at tail
      * for MAPPED BYTE BUFFER
      * @return : MappedByteBuffer
@@ -89,6 +115,7 @@ public class FixedMemMapReferenceQueue {
         mmap_buffer_queue.offer(buf);
         return buf;
     }
+
 
     public static boolean isFileQueueEmpty() {
         return mmap_filename_queue.isEmpty();
