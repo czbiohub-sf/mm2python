@@ -3,6 +3,9 @@
 # org.mm2python
 micro-manager 2.0 plugin that enables python control using Py4j remote procedure calls and IPC data transfer using memory mapped files
 
+# Status
+Archived: This repository provides functional Micro-Manager 2 plugin and python API, but is no longer maintained.
+
 # dependencies
 org.mm2python is a plugin for the open-source microscopy control project Micro-Manager (https://micro-manager.org/) (https://github.com/micro-manager/micro-manager)
 Please download and install version 2.0 from that site.
